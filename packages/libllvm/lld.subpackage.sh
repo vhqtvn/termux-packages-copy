@@ -1,6 +1,5 @@
 TERMUX_SUBPKG_INCLUDE="
 include/lld/
-lib/cmake/lld/
 lib/liblld*.a
 bin/lld
 bin/lld-link

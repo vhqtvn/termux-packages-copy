@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/data/data/com.termux/files/usr/bin/sh
 #edited from https://aur.archlinux.org/cgit/aur.git/tree/ef.sh?h=electricfence
 if [ "$1" = '' ]; then
 	echo 'Usage: ef [executable] [arguments].'

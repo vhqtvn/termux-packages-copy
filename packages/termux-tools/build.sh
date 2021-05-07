@@ -1,8 +1,7 @@
 TERMUX_PKG_HOMEPAGE=https://termux.com/
 TERMUX_PKG_DESCRIPTION="Basic system tools for Termux"
 TERMUX_PKG_LICENSE="GPL-3.0"
-TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION=0.119
+TERMUX_PKG_VERSION=0.96
 TERMUX_PKG_SKIP_SRC_EXTRACT=true
 TERMUX_PKG_PLATFORM_INDEPENDENT=true
 TERMUX_PKG_ESSENTIAL=true
@@ -36,12 +35,9 @@ termux_step_make_install() {
 		termux-open termux-open-url termux-reload-settings termux-reset \
 		termux-setup-storage termux-wake-lock termux-wake-unlock termux-change-repo; do
 			install -Dm700 $TERMUX_PKG_BUILDER_DIR/$script $TERMUX_PREFIX/bin/$script
-			sed -i -e "s%\@TERMUX_APP_PACKAGE\@%${TERMUX_APP_PACKAGE}%g" \
-				-e "s%\@TERMUX_BASE_DIR\@%${TERMUX_BASE_DIR}%g" \
-				-e "s%\@TERMUX_CACHE_DIR\@%${TERMUX_CACHE_DIR}%g" \
-				-e "s%\@TERMUX_HOME\@%${TERMUX_ANDROID_HOME}%g" \
-				-e "s%\@TERMUX_PREFIX\@%${TERMUX_PREFIX}%g" \
-				-e "s%\@PACKAGE_VERSION\@%${TERMUX_PKG_VERSION}%g" \
+			sed -i -e "s|@TERMUX_PREFIX@|${TERMUX_PREFIX}|g" \
+				-e "s|@TERMUX_HOME@|${TERMUX_ANDROID_HOME}|g" \
+				-e "s|@TERMUX_CACHE_DIR@|$(realpath ${TERMUX_PREFIX}/../../cache)|g" \
 				$TERMUX_PREFIX/bin/$script
 	done
 
@@ -49,19 +45,6 @@ termux_step_make_install() {
 	ln -sfr $TERMUX_PREFIX/bin/termux-open $TERMUX_PREFIX/bin/xdg-open
 
 	mkdir -p $TERMUX_PREFIX/share/man/man1
-	sed -e "s|@TERMUX_PREFIX@|${TERMUX_PREFIX}|g" -e "s|@TERMUX_HOME@|${TERMUX_ANDROID_HOME}|g" \
-		$TERMUX_PKG_BUILDER_DIR/termux.1.md.in > $TERMUX_PKG_TMPDIR/termux.1.md
 	pandoc --standalone --to man --output $TERMUX_PREFIX/share/man/man1/termux.1 \
-		$TERMUX_PKG_TMPDIR/termux.1.md
-
-	mkdir -p $TERMUX_PREFIX/share/examples/termux
-	install -Dm600 $TERMUX_PKG_BUILDER_DIR/termux.properties $TERMUX_PREFIX/share/examples/termux/
-
-	mkdir -p $TERMUX_PREFIX/etc/profile.d
-	cat <<- EOF > $TERMUX_PREFIX/etc/profile.d/init-termux-properties.sh
-	if [ ! -f $TERMUX_ANDROID_HOME/.config/termux/termux.properties ] && [ ! -e $TERMUX_ANDROID_HOME/.termux/termux.properties ]; then
-		mkdir -p $TERMUX_ANDROID_HOME/.termux
-		cp $TERMUX_PREFIX/share/examples/termux/termux.properties $TERMUX_ANDROID_HOME/.termux/
-	fi
-	EOF
+		$TERMUX_PKG_BUILDER_DIR/termux.1.md
 }

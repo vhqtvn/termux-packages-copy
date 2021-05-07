@@ -1,7 +1,6 @@
 TERMUX_PKG_HOMEPAGE=https://lftp.tech/
 TERMUX_PKG_DESCRIPTION="FTP/HTTP client and file transfer program"
 TERMUX_PKG_LICENSE="GPL-3.0"
-TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION=4.9.2
 TERMUX_PKG_SRCURL=https://lftp.tech/ftp/lftp-${TERMUX_PKG_VERSION}.tar.xz
 TERMUX_PKG_SHA256=c517c4f4f9c39bd415d7313088a2b1e313b2d386867fe40b7692b83a20f0670d
@@ -19,5 +18,11 @@ ac_cv_func_dn_expand=no
 "
 
 termux_step_pre_configure() {
+	if $TERMUX_DEBUG; then
+		#When doing debug build, -D_FORTIFY_SOURCE=2 gives this error:
+		# /home/builder/.termux-build/_lib/16-aarch64-21-v3/bin/../sysroot/usr/include/bits/fortify/string.h:79:26: error: use of undeclared identifier '__USE_FORTIFY_LEVEL'
+		export CFLAGS=${CFLAGS/-D_FORTIFY_SOURCE=2/}
+	fi
+
 	CXXFLAGS+=" -DNO_INLINE_GETPASS=1"
 }

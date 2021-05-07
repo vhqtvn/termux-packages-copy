@@ -30,6 +30,8 @@ jobs:
           liblldb-6.0 libllvm6.0:amd64 mono-runtime-common monodoc-manual powershell ruby
         sudo apt autoremove -yq
         sudo rm -rf /opt/hostedtoolcache /usr/local /usr/share/dotnet /usr/share/swift
+    - name: Patch
+      run: ./patch-repo.sh
     - name: Build
       run: |
         BASE_COMMIT=$(jq --raw-output .pull_request.base.sha "$GITHUB_EVENT_PATH")
@@ -65,7 +67,7 @@ jobs:
         if grep -qP '^scripts/(Dockerfile|setup-ubuntu\.sh)$' <<< "$CHANGED_FILES"; then
           echo "Detected changes for environment setup scripts. Building custom Docker image now."
           cd ./scripts
-          docker build -t termux/package-builder:latest .
+          docker build -t vanhoavn/vheditor-package-builder:latest .
           cd ..
         fi
         # Parse changed files and identify new packages and deleted packages.
@@ -156,7 +158,7 @@ jobs:
         echo "${{ secrets.KNOWN_HOST_ENTRY }}" >> ~/.ssh/known_hosts
         ssh-agent -a $SSH_AUTH_SOCK
         ssh-add - <<< "${{ secrets.SSHKEY }}"
-    - name: Upload to grimler.se
+    - name: Upload to vhn.vn
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       run: |
@@ -165,6 +167,6 @@ jobs:
         # instead of one for each arch on the server.
         archive="termux-packages-${{ github.sha }}.zip"
         zip $archive debs-*-${{ github.sha }}.tar
-        sftp -P ${{ secrets.PORT }} ${{ secrets.USER }}@grimler.se <<EOF
+        sftp -P ${{ secrets.PORT }} ${{ secrets.USER }}@vhn.vn <<EOF
           put $archive /debs/
         EOF

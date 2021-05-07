@@ -19,14 +19,16 @@ jobs:
     steps:
     - name: Clone repository
       uses: actions/checkout@v2
+    - name: Patch
+      run: ./patch-repo.sh
     - name: Build
       run: |
         cd ./scripts
-        docker build --tag termux/package-builder:latest .
+        docker build --tag vanhoavn/vheditor-package-builder:latest .
     - name: Push to hub.docker.com
       env:
-        DOCKER_LOGIN: xeffyr
+        DOCKER_LOGIN: vanhoavn
         DOCKER_PASS: ${{ secrets.DOCKER_HUB_PASSWORD }}
       run: |
         docker login --username "${DOCKER_LOGIN}" --password "${DOCKER_PASS}"
-        docker push termux/package-builder:latest
+        docker push vanhoavn/vheditor-package-builder:latest

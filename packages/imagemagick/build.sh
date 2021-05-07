@@ -1,10 +1,9 @@
 TERMUX_PKG_HOMEPAGE=https://www.imagemagick.org/
 TERMUX_PKG_DESCRIPTION="Suite to create, edit, compose, or convert images in a variety of formats"
 TERMUX_PKG_LICENSE="ImageMagick"
-TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION=7.0.11.11
+TERMUX_PKG_VERSION=7.0.10.34
 TERMUX_PKG_SRCURL=https://github.com/ImageMagick/ImageMagick/archive/$(echo $TERMUX_PKG_VERSION | sed 's/\(.*\)\./\1-/').tar.gz
-TERMUX_PKG_SHA256=98ae45b0f904a733bd126132395864a913a57304e77994a5c83414c31feda549
+TERMUX_PKG_SHA256=0202a99644785f0bd9de611bb3141fbf579d707eea2dd8706165c9be8160966d
 TERMUX_PKG_DEPENDS="fftw, fontconfig, freetype, fribidi, glib, harfbuzz, libandroid-support, libbz2, libcairo, libffi, libgraphite, libjpeg-turbo, liblzma, libpixman, libpng, librsvg, libtiff, libuuid, libwebp, libx11, libxau, libxcb, libxdmcp, libxext, libxml2, littlecms, openjpeg, pango, pcre, zlib"
 TERMUX_PKG_BREAKS="imagemagick-dev, imagemagick-x"
 TERMUX_PKG_REPLACES="imagemagick-dev, imagemagick-x"

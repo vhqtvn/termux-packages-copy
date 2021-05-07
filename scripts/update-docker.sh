@@ -2,7 +2,7 @@
 set -e -u
 
 CONTAINER=termux-package-builder
-IMAGE=termux/package-builder
+IMAGE=vanhoavn/vheditor-package-builder
 
 docker pull $IMAGE
 

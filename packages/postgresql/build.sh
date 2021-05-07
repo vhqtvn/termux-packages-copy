@@ -2,10 +2,10 @@ TERMUX_PKG_HOMEPAGE=https://www.postgresql.org
 TERMUX_PKG_DESCRIPTION="Object-relational SQL database"
 TERMUX_PKG_LICENSE="BSD"
 TERMUX_PKG_LICENSE_FILE="COPYRIGHT"
-TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION=13.2
+TERMUX_PKG_VERSION=13.0
+TERMUX_PKG_REVISION=3
 TERMUX_PKG_SRCURL=https://ftp.postgresql.org/pub/source/v$TERMUX_PKG_VERSION/postgresql-$TERMUX_PKG_VERSION.tar.bz2
-TERMUX_PKG_SHA256=5fd7fcd08db86f5b2aed28fcfaf9ae0aca8e9428561ac547764c2a2b0f41adfc
+TERMUX_PKG_SHA256=80e750be8d436b54197636a02636f8fd3263ba6779bf865b04832495ea592296
 TERMUX_PKG_DEPENDS="openssl, libcrypt, readline, libandroid-shmem, libuuid, libxml2, libicu, zlib"
 # - pgac_cv_prog_cc_ldflags__Wl___as_needed: Inform that the linker supports as-needed. It's
 #   not stricly necessary but avoids unnecessary linking of binaries.
@@ -53,18 +53,15 @@ termux_step_post_make_install() {
 	for contrib in \
 		hstore \
 		citext \
-		dblink \
 		pageinspect \
 		pgcrypto \
 		pgrowlocks \
 		pg_freespacemap \
 		pg_stat_statements\
 		pg_trgm \
-		postgres_fdw \
 		fuzzystrmatch \
 		unaccent \
 		uuid-ossp \
-		btree_gist \
 		; do
 		(cd contrib/$contrib && make -s -j $TERMUX_MAKE_PROCESSES install)
 	done

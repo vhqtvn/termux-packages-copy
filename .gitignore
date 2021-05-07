@@ -5,6 +5,8 @@
 Session.vim
 .netrwhist
 *~
+.secrets
+.vscode
 
 # Vagrant
 scripts/*.log
