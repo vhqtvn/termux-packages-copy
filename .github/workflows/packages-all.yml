@@ -32,7 +32,7 @@ jobs:
       run: ./patch-repo.sh
     - name: Build
       run: |
-        ./scripts/run-docker.sh ./build-all.sh -a ${{ matrix.target_arch }} -i -o ./debs
+        ./scripts/run-docker.sh ./build-all.sh -a ${{ matrix.target_arch }} -o ./debs
         mv ./_buildall-${{ matrix.target_arch }}/buildorder.txt ./debs/built_packages.txt
         tar cf artifacts/debs-${{ matrix.target_arch }}-${{ github.sha }}.tar debs
     - name: Checksums for built *.deb files
