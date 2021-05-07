@@ -5,10 +5,7 @@ on:
     branches:
     - master
     paths:
-    - 'packages/**'
-  pull_request:
-    paths:
-    - 'packages/**'
+    - '.github/workflows/packages-all.yml'
 
 jobs:
   build:
