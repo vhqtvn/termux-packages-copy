@@ -9,7 +9,7 @@ TERMUX_PKG_SRCURL=https://github.com/apple/swift/archive/swift-$TERMUX_PKG_VERSI
 TERMUX_PKG_SHA256=f9e5bd81441c4ec13dd9ea290e2d7b8fe9b30ef66ad68947481022ea5179f83a
 TERMUX_PKG_HOSTBUILD=true
 TERMUX_PKG_DEPENDS="binutils-gold, clang, libc++, ndk-sysroot, libandroid-glob, libandroid-spawn, libcurl, libicu, libicu-static, libsqlite, libuuid, libxml2, libdispatch, llbuild"
-TERMUX_PKG_BUILD_DEPENDS="cmake, ninja, perl, pkg-config, python2, rsync"
+TERMUX_PKG_BUILD_DEPENDS="cmake, ninja, perl, pkg-config, python2, rsync, libiconv"
 TERMUX_PKG_BLACKLISTED_ARCHES="i686, x86_64"
 TERMUX_PKG_NO_STATICSPLIT=true
 

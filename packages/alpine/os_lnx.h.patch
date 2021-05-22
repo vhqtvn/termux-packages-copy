@@ -1,18 +1,17 @@
---- ../cache/alpine-2.20/imap/src/osdep/unix/os_lnx.h	2015-01-12 05:12:25.505178442 +0000
-+++ ./imap/src/osdep/unix/os_lnx.h	2016-12-10 23:21:20.644163814 +0000
-@@ -48,13 +48,13 @@
- #include <syslog.h>
- #include <sys/file.h>
- 
--
- /* Linux gets this wrong */
- 
- #define setpgrp setpgid
+diff -Naur ./alpine.orig/imap/src/osdep/unix/os_lnx.h ./alpine.patch/imap/src/osdep/unix/os_lnx.h
+--- ./imap/src/osdep/unix/os_lnx.h	2021-05-16 06:44:05.008507235 +0000
++++ ./imap/src/osdep/unix/os_lnx.h	2021-05-16 06:44:57.139105846 +0000
+@@ -58,6 +58,13 @@
  
  #define direct dirent
--
+ 
++#ifndef L_SET
 +#define L_SET SEEK_SET
-+#define FNDELAY O_NDELAY 
++#endif
++#ifndef FNDELAY
++#define FNDELAY O_NDELAY
++#endif
++
+ int safe_flock (int, int);
  #define flock safe_flock
  
- #define utime portable_utime

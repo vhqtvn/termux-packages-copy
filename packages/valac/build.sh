@@ -7,7 +7,12 @@ TERMUX_PKG_SHA256=838adc50ac08881e06cf233fefd93740dec1530312cc1cf12c36d4e0e87d30
 TERMUX_PKG_DEPENDS="clang, glib, pkg-config"
 TERMUX_PKG_BREAKS="valac-dev"
 TERMUX_PKG_REPLACES="valac-dev"
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS="--with-cgraph=no"
+TERMUX_PKG_EXTRA_CONFIGURE_ARGS="--with-cgraph=yes"
+TERMUX_PKG_BUILD_IN_SRC=true
+
+termux_step_make() {
+	make
+}
 
 termux_step_post_make_install() {
 	cd ${TERMUX_PREFIX}/lib

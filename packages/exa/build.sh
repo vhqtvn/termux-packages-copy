@@ -13,7 +13,7 @@ termux_step_pre_configure() {
 	rm $TERMUX_PKG_SRCDIR/Makefile
 	termux_setup_rust
 
-	CFLAGS="$CFLAGS $CPPFLAGS"
+	CFLAGS="${CFLAGS-} ${CPPFLAGS-}"
 	cargo update
 }
 

@@ -74,7 +74,7 @@ while read -r PKG PKG_DIR; do
 	BUILD_START=$(date "+%s")
 	bash -x "$BUILDSCRIPT" -a "$TERMUX_ARCH" $TERMUX_DEBUG \
 		${TERMUX_DEBDIR+-o $TERMUX_DEBDIR} $TERMUX_INSTALL_DEPS "$PKG_DIR" \
-		> "$BUILDALL_DIR"/"${PKG}".out 2> "$BUILDALL_DIR"/"${PKG}".err || echo "Failed, See $BUILDALL_DIR/${PKG}.err"
+		> "$BUILDALL_DIR"/"${PKG}".out 2> "$BUILDALL_DIR"/"${PKG}".err
 	BUILD_END=$(date "+%s")
 	BUILD_SECONDS=$(( BUILD_END - BUILD_START ))
 	echo "done in $BUILD_SECONDS"

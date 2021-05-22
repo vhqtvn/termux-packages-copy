@@ -1,0 +1,13 @@
+--- procps-3.3.17.orig/Makefile.am	2021-02-09 17:11:25.000000000 +0700
++++ procps-3.3.17/Makefile.am	2021-05-12 00:50:29.000000000 +0700
+@@ -162,8 +162,8 @@
+ 	top/top_nls.c \
+ 	lib/fileutils.c
+ 
+-if CYGWIN
+ top_top_SOURCES += lib/strverscmp.c
++if CYGWIN
+ else
+ dist_man_MANS += \
+ 	slabtop.1
+diff -ru procps-3.3.17.orig/Makefile.in procps-3.3.17/Makefile.in

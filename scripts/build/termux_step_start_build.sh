@@ -75,8 +75,9 @@ termux_step_start_build() {
 				fi
 			fi
 
+			# if ! termux_download_deb $PKG $DEP_ARCH $DEP_VERSION; then
 			if ! termux_download_deb $PKG $DEP_ARCH $DEP_VERSION; then
-				echo "Download of $PKG@$DEP_VERSION from $TERMUX_REPO_URL failed, building instead"
+				echo "Download of $PKG@$DEP_VERSION from ${TERMUX_REPO_URLi:-} failed, building instead"
 				TERMUX_BUILD_IGNORE_LOCK=true ./build-package.sh -I "${PKG_DIR}"
 				continue
 			else

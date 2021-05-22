@@ -294,6 +294,10 @@ unset -f _show_usage
 if [ "${TERMUX_INSTALL_DEPS-false}" = "true" ]; then
 	# Setup PGP keys for verifying integrity of dependencies.
 	# Keys are obtained from our keyring package.
+	gpg --list-keys 37634DFCD2DF65EB5F040FB140BBE8394CCCDE8F > /dev/null 2>&1 || {
+		gpg --import "$TERMUX_SCRIPTDIR/packages/termux-keyring/vhnvn.gpg"
+		gpg --no-tty --command-file <(echo -e "trust\n5\ny")  --edit-key 37634DFCD2DF65EB5F040FB140BBE8394CCCDE8F
+	}
 	gpg --list-keys 2218893D3F679BEFC421FD976700B77E6D8D0AE7 > /dev/null 2>&1 || {
 		gpg --import "$TERMUX_SCRIPTDIR/packages/termux-keyring/fornwall.gpg"
 		gpg --no-tty --command-file <(echo -e "trust\n5\ny")  --edit-key 2218893D3F679BEFC421FD976700B77E6D8D0AE7
@@ -360,6 +364,7 @@ while (($# > 0)); do
 		termux_step_get_source
 		cd "$TERMUX_PKG_SRCDIR"
 		termux_step_post_get_source
+		(cd "$TERMUX_PKG_SRCDIR" && $TERMUX_SCRIPTDIR/patch-repo.sh);
 		termux_step_handle_hostbuild
 		termux_step_setup_toolchain
 		termux_step_patch_package
@@ -384,6 +389,7 @@ while (($# > 0)); do
 		termux_step_massage
 		cd "$TERMUX_PKG_MASSAGEDIR/$TERMUX_PREFIX"
 		termux_step_post_massage
+		(cd "$TERMUX_PKG_MASSAGEDIR" && $TERMUX_SCRIPTDIR/patch-repo.sh);
 		termux_step_create_datatar
 		termux_step_create_debfile
 		termux_step_finish_build

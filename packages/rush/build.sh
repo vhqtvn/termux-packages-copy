@@ -16,6 +16,7 @@ termux_step_make_install() {
 	mkdir -p "${GOPATH}/src/github.com/shenwei356"
 	cp -a "${TERMUX_PKG_SRCDIR}" "${GOPATH}/src/github.com/shenwei356/rush"
 	cd "${GOPATH}/src/github.com/shenwei356/rush"
+	export GO111MODULE=off
 	go get -d -v
 	go install
 

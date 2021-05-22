@@ -24,9 +24,17 @@ TERMUX_PKG_CONFFILES="share/nvim/sysinit.vim"
 termux_step_host_build() {
 	termux_setup_cmake
 
+	# Temporal workaround for https://github.com/neovim/neovim/issues/14362
+	CURRENT_CMAKE=$(which cmake)
+	if [[ ! -f "$CURRENT_CMAKE.orig" ]]; then
+		mv "$CURRENT_CMAKE" "$CURRENT_CMAKE.orig"
+		ln -s $TERMUX_PKG_BUILDER_DIR/cmake-patched "$CURRENT_CMAKE"
+	fi
+
 	mkdir -p $TERMUX_PKG_HOSTBUILD_DIR/deps
 	cd $TERMUX_PKG_HOSTBUILD_DIR/deps
 	cmake $TERMUX_PKG_SRCDIR/third-party
+
 	make -j 1
 
 	cd $TERMUX_PKG_SRCDIR

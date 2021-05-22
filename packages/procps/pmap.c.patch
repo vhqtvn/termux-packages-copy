@@ -1,17 +1,16 @@
-diff -u -r ../procps-ng-3.3.9/pmap.c ./pmap.c
---- ../procps-ng-3.3.9/pmap.c	2013-09-11 13:53:35.000000000 +0200
-+++ ./pmap.c	2014-07-06 07:58:12.054894441 +0200
-@@ -25,7 +25,9 @@
+--- procps-3.3.17.orig/pmap.c	2021-02-09 17:11:25.000000000 +0700
++++ procps-3.3.17/pmap.c	2021-05-11 23:58:45.000000000 +0700
+@@ -24,7 +24,9 @@
+ #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
- #include <sys/ipc.h>
 +#ifndef __ANDROID__
+ #include <sys/ipc.h>
  #include <sys/shm.h>
 +#endif
  #include <sys/stat.h>
  #include <sys/types.h>
- #include <unistd.h>
-@@ -149,6 +151,7 @@
+@@ -150,6 +152,7 @@
  
  static void discover_shm_minor(void)
  {
@@ -19,11 +18,12 @@ diff -u -r ../procps-ng-3.3.9/pmap.c ./pmap.c
  	void *addr;
  	int shmid;
  	char mapbuf_b[256];
-@@ -205,6 +208,7 @@
+@@ -206,6 +209,7 @@
  		perror(_("shared memory remove"));
  
  	return;
 +#endif
  }
  
- static char *mapping_name(proc_t * p, unsigned KLONG addr,
+ static const char *mapping_name(const proc_t * p, unsigned KLONG addr,
+diff -ru procps-3.3.17.orig/proc/escape.c procps-3.3.17/proc/escape.c

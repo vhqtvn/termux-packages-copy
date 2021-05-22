@@ -1,10 +1,10 @@
 TERMUX_PKG_HOMEPAGE=https://www.ruby-lang.org/
 TERMUX_PKG_DESCRIPTION="Dynamic programming language with a focus on simplicity and productivity"
 TERMUX_PKG_LICENSE="BSD 2-Clause"
-TERMUX_PKG_VERSION=2.7.2
-TERMUX_PKG_REVISION=2
+TERMUX_PKG_VERSION=2.7.3
+TERMUX_PKG_REVISION=3
 TERMUX_PKG_SRCURL=https://cache.ruby-lang.org/pub/ruby/${TERMUX_PKG_VERSION:0:3}/ruby-${TERMUX_PKG_VERSION}.tar.xz
-TERMUX_PKG_SHA256=1b95ab193cc8f5b5e59d2686cb3d5dcf1ddf2a86cb6950e0b4bdaae5040ec0d6
+TERMUX_PKG_SHA256=5e91d1650857d43cd6852e05ac54683351e9c301811ee0bef43a67c4605e7db1
 # libbffi is used by the fiddle extension module:
 TERMUX_PKG_DEPENDS="gdbm, libandroid-support, libffi, libgmp, readline, openssl, libyaml, zlib"
 TERMUX_PKG_RECOMMENDS="clang, make, pkg-config"
@@ -30,6 +30,10 @@ termux_step_host_build() {
 }
 
 termux_step_pre_configure() {
+	if [ "$(shasum /usr/lib/ruby/vendor_ruby/rubygems/defaults/operating_system.rb | awk '{print $1}')" == "96d8a66e0b70ed9f578218857edb8d47878eeb21" ]; then
+		sudo patch /usr/lib/ruby/vendor_ruby/rubygems/defaults/operating_system.rb "$TERMUX_PKG_BUILDER_DIR/host-patch/operating_system.rb.patch"
+	fi
+
 	if [ "$TERMUX_ARCH_BITS" = 32 ]; then
 		# process.c:function timetick2integer: error: undefined reference to '__mulodi4'
 		TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" rb_cv_builtin___builtin_mul_overflow=no"

@@ -4,7 +4,7 @@ TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_VERSION=(6.2.20200725
 		    9.22
 		    15)
-TERMUX_PKG_SRCURL=(https://dl.bintray.com/termux/upstream/ncurses-${TERMUX_PKG_VERSION:0:3}-${TERMUX_PKG_VERSION:4}.tgz
+TERMUX_PKG_SRCURL=(https://github.com/termux/distfiles/releases/download/2021.01.04/ncurses-${TERMUX_PKG_VERSION:0:3}-${TERMUX_PKG_VERSION:4}.tgz
 		   https://fossies.org/linux/misc/rxvt-unicode-${TERMUX_PKG_VERSION[1]}.tar.bz2
 		   https://github.com/thestinger/termite/archive/v${TERMUX_PKG_VERSION[2]}.tar.gz)
 TERMUX_PKG_SHA256=(05da39f964643b595bfdb874e52eabfd407c02d8fbed35602040735f4af9b09d

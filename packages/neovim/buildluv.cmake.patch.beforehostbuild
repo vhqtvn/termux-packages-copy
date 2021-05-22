@@ -1,0 +1,11 @@
+--- src/third-party/cmake/BuildLuv.cmake	2021-05-17 07:26:28.172367997 +0000
++++ src.patched/third-party/cmake/BuildLuv.cmake	2021-05-17 06:46:46.748397667 +0000
+@@ -55,7 +55,7 @@
+ 
+ set(LUV_SRC_DIR ${DEPS_BUILD_DIR}/src/luv)
+ set(LUV_INCLUDE_FLAGS
+-  "-I${DEPS_INSTALL_DIR}/include -I${DEPS_INSTALL_DIR}/include/luajit-2.0")
++	"-I${DEPS_INSTALL_DIR}/include -I${DEPS_INSTALL_DIR}/include/luajit-2.0 -I${DEPS_BUILD_DIR}/src/lua-compat-5.3")
+ 
+ # Replace luv default rockspec with the alternate one under the "rockspecs"
+ # directory

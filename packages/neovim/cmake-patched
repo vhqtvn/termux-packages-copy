@@ -1,0 +1,19 @@
+#!/bin/bash
+build_args=()
+args=()
+
+# move --build to first
+for arg in "$@"
+do
+    if [[ ! -z $args_build_flag ]]; then
+        build_args+=("--build")
+        build_args+=("$arg")
+        args_build_flag=
+    elif [[ "$arg" == "--build" ]]; then
+        args_build_flag=1
+    else
+        args+=("$arg")
+    fi
+done
+
+cmake.orig "${build_args[@]}" "${args[@]}"

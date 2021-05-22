@@ -15,7 +15,7 @@ termux_step_make() {
 
 	cd "$GOPATH"/src/github.com/ethereum/go-ethereum
 	for applet in geth abigen bootnode ethkey evm rlpdump puppeth; do
-		(cd ./cmd/"$applet" && go build -v)
+		(cd ./cmd/"$applet" && go build -mod=mod -v)
 	done
 	unset applet
 }

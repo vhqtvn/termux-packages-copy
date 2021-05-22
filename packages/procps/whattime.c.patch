@@ -1,6 +1,5 @@
-diff -uNr procps-ng-3.3.16/proc/whattime.c procps-ng-3.3.16.mod/proc/whattime.c
---- procps-ng-3.3.16/proc/whattime.c	2019-10-27 13:32:58.347231010 +0200
-+++ procps-ng-3.3.16.mod/proc/whattime.c	2020-06-07 02:18:11.078243361 +0300
+--- procps-3.3.17.orig/proc/whattime.c	2021-02-09 17:11:25.000000000 +0700
++++ procps-3.3.17/proc/whattime.c	2021-05-12 00:00:45.000000000 +0700
 @@ -95,6 +95,7 @@
      else
        pos += sprintf(buf + pos, "%d min, ", upminutes);
@@ -9,12 +8,12 @@ diff -uNr procps-ng-3.3.16/proc/whattime.c procps-ng-3.3.16.mod/proc/whattime.c
  /* count the number of users */
  
      numuser = 0;
-@@ -107,7 +108,7 @@
-     endutent();
+@@ -108,6 +109,7 @@
  
      pos += sprintf(buf + pos, "%2d user%s, ", numuser, numuser == 1 ? "" : "s");
--
+ 
 +#endif
      loadavg(&av[0], &av[1], &av[2]);
  
      pos += sprintf(buf + pos, " load average: %.2f, %.2f, %.2f",
+diff -ru procps-3.3.17.orig/procio.c procps-3.3.17/procio.c
