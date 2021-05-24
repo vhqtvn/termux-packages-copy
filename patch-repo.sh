@@ -1,8 +1,8 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
 case "$(uname -s)" in
-    Darwin*)    INPLACE_OPT=(-i '') ;;
-    *)          INPLACE_OPT=(-i'') ;;
+    Darwin*)    INPLACE_OPT=(-i ''); ;;
+    *)          INPLACE_OPT=(-i''); ;;
 esac
 do_replace() {
     find . -path ./debs -prune -false -o \
