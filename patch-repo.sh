@@ -14,14 +14,14 @@ do_replace() {
 }
 if [[ "$1" == "--reverse" ]] || [[ "$1" == "-r" ]]; then
     echo "* Replace vsc->termux in $(pwd)"
-    [[ -f scripts/build/termux_step_setup_variables.sh ]] && LC_CTYPE=C LC_ALL=C LANG=C sed "${INPLACE_OPT[@]}" -e "s#vsc[.]vhn[.]vn#grimler.se#g" "scripts/build/termux_step_setup_variables.sh"
-    do_replace 's#vn[.]vhn[.]vsc#com.termux#g'
-    do_replace 's#csv[.]nhv[.]nv#xumret.moc#g'
-    do_replace 's#//vsc[.]vhn[.]vn#//termux.org#g'
+    [[ -f scripts/build/termux_step_setup_variables.sh ]] && LC_CTYPE=C LC_ALL=C LANG=C sed "${INPLACE_OPT[@]}" -e "s#vsc[.]vhn[.]vn#grim''ler.se#g" "scripts/build/termux_step_setup_variables.sh"
+    do_replace 's#vn[.]vhn[.]vsc#com.t''ermux#g'
+    do_replace 's#csv[.]nhv[.]nv#xumre''t.moc#g'
+    do_replace 's#//vsc[.]vhn[.]vn#//ter''mux.org#g'
 else
     echo "* Replace termux->vsc in $(pwd)"
-    [[ -f scripts/build/termux_step_setup_variables.sh ]] && LC_CTYPE=C LC_ALL=C LANG=C sed "${INPLACE_OPT[@]}" -e "s#grimler[.]se#vsc.vhn.vn#g" "scripts/build/termux_step_setup_variables.sh"
-    do_replace 's#com[.]termux#com.termux#g'
-    do_replace 's#xumret[.]moc#xumret.moc#g'
-    do_replace 's#//termux[.]org#//termux.org#g'
+    [[ -f scripts/build/termux_step_setup_variables.sh ]] && LC_CTYPE=C LC_ALL=C LANG=C sed "${INPLACE_OPT[@]}" -e "s#grimler[.]se#vsc.v''hn.vn#g" "scripts/build/termux_step_setup_variables.sh"
+    do_replace 's#com[.]termux#vn.vh''n.vsc#g'
+    do_replace 's#xumret[.]moc#csv.nh''v.nv#g'
+    do_replace 's#//termux[.]org#//vsc.vh''n.vn#g'
 fi
