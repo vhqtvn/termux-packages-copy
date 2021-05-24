@@ -16,11 +16,7 @@ termux_step_make() {
 	mkdir -p "${GOPATH}/src/github.com/msoap/"
 	cp -a "${TERMUX_PKG_SRCDIR}" "${GOPATH}/src/github.com/msoap/shell2http"
 	cd "${GOPATH}/src/github.com/msoap/shell2http"
-<<<<<<< HEAD
-	export GO111MODULE=off
-=======
 	go mod init
->>>>>>> 1597d113742634f83219926689e175577bae397a
 	go get -d -v
 	go build
 }

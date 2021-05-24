@@ -40,8 +40,6 @@ show_help() {
 	exit 1
 }
 
-<<<<<<< HEAD
-=======
 check_mirror() {
 	local mirror="${1%/}"
 	local timeout="${2-5}"
@@ -68,20 +66,10 @@ last_modified() {
 	echo $((now - mtime))
 }
 
->>>>>>> 1597d113742634f83219926689e175577bae397a
 select_mirror() {
 	local main_repo="https://termux.org/packages"
 
 	declare -A mirrors
-<<<<<<< HEAD
-	mirrors[50]="https://dl.bintray.com/termux/termux-packages-24"
-	mirrors[23]="https://termux.mentality.rip/termux-packages-24"
-	mirrors[15]="https://main.termux-mirror.ml"
-	mirrors[12]="https://grimler.se/termux-packages-24"
-
-	local current_mirror
-	current_mirror=$(grep -P "^\s*deb\s+" @TERMUX_PREFIX@/etc/apt/sources.list | grep -oP 'https?://[a-z0-9/._-]+')
-=======
 	mirrors[26]="$main_repo"
 	mirrors[20]="https://k51qzi5uqu5dg9vawh923wejqffxiu9bhqlze5f508msk0h7ylpac27fdgaskx.ipns.dweb.link"
 	mirrors[19]="https://grimler.se/termux-packages-24"
@@ -90,7 +78,6 @@ select_mirror() {
 
 	local current_mirror
 	current_mirror=$(grep -m 1 -P "^\s*deb\s+" @TERMUX_PREFIX@/etc/apt/sources.list | grep -oP 'https?://[^\s]+')
->>>>>>> 1597d113742634f83219926689e175577bae397a
 
 	# Do not update mirror if:
 	# * Uses .cn domain - specific to Chinese users.
@@ -152,9 +139,6 @@ select_mirror() {
 }
 
 update_apt_cache() {
-<<<<<<< HEAD
-	if [ -z "$(find /data/data/com.termux/cache/apt/pkgcache.bin -mmin -20 2>/dev/null)" ]; then
-=======
 	local current_host
 	current_host=$(sed -nE -e 's|^\s*deb\s+https?://(.+)\s+stable\s+main$|\1|p' @TERMUX_PREFIX@/etc/apt/sources.list | head -n 1)
 
@@ -183,7 +167,6 @@ update_apt_cache() {
 	sources_modified=$(last_modified "@TERMUX_PREFIX@/etc/apt/sources.list")
 
 	if (( sources_modified <= cache_modified )) || (( cache_modified > 1200 )); then
->>>>>>> 1597d113742634f83219926689e175577bae397a
 		apt update
 	fi
 }
