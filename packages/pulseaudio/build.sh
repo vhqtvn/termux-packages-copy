@@ -2,19 +2,20 @@ TERMUX_PKG_HOMEPAGE=https://www.freedesktop.org/wiki/Software/PulseAudio
 TERMUX_PKG_DESCRIPTION="A featureful, general-purpose sound server"
 TERMUX_PKG_LICENSE="GPL-2.0"
 TERMUX_PKG_SRCURL=https://github.com/pulseaudio/pulseaudio.git
-TERMUX_PKG_VERSION=13.0
-TERMUX_PKG_REVISION=2
-TERMUX_PKG_DEPENDS="libltdl, libsndfile, libandroid-glob, libsoxr, speexdsp, libopus"
+TERMUX_PKG_VERSION=14.2
+TERMUX_PKG_REVISION=4
+TERMUX_PKG_DEPENDS="libltdl, libsndfile, libandroid-glob, libsoxr, speexdsp, libwebrtc-audio-processing"
 TERMUX_PKG_BREAKS="libpulseaudio-dev, libpulseaudio"
 TERMUX_PKG_REPLACES="libpulseaudio-dev, libpulseaudio"
-TERMUX_PKG_BUILD_DEPENDS="libtool"
+# glib is only a runtime dependency of pulseaudio-glib subpackage
+TERMUX_PKG_BUILD_DEPENDS="libtool, glib"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="--disable-neon-opt
 --disable-alsa
 --disable-esound
---disable-glib2
 --disable-x11
 --disable-gtk3
 --disable-openssl
+--enable-glib2
 --without-caps
 --with-database=simple
 --disable-memfd

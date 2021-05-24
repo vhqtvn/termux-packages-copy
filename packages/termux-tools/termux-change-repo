@@ -35,6 +35,15 @@ select_repository() {
         UNSTABLE="https://grimler.se/unstable-packages"
         X11="https://grimler.se/x11-packages"
 
+    elif [ "$1" == "Mirrors by Kcubeterm" ]; then
+        echo "[*] Kcubeterm's mirrors selected"
+        MAIN="https://dl.kcubeterm.me/termux-packages-24"
+        GAME="https://dl.kcubeterm.me/game-packages-24"
+        ROOT="https://dl.kcubeterm.me/termux-root-packages-24"
+        SCIENCE="https://dl.kcubeterm.me/science-packages-24"
+        UNSTABLE="https://dl.kcubeterm.me/unstable-packages"
+        X11="https://dl.kcubeterm.me/x11-packages"
+
     elif [ "$1" == "Mirrors by Xeffyr" ]; then
         echo "[*] Xeffyr's mirrors selected"
         MAIN="https://main.termux-mirror.ml"
@@ -120,7 +129,12 @@ dialog \
     "Official repositories" "Hosted on Bintray" on \
     "Mirrors by A1batross" "Hosted on termux.mentality.rip" off \
     "Mirrors by Grimler" "Hosted on grimler.se" off \
+<<<<<<< HEAD
     "Mirrors by Xeffyr" "Hosted on termux-mirror.ml" off \
+=======
+    "Mirrors by Kcubeterm" "Hosted on dl.kcubeterm.me" off \
+    "Mirrors by Xeffyr" "Hosted on IPFS" off \
+>>>>>>> 1597d113742634f83219926689e175577bae397a
     "Mirrors by Tsinghua University" "Hosted on mirrors.tuna.tsinghua.edu.cn" off \
     "Mirrors by BFSU" "Hosted on mirrors.bfsu.edu.cn" off \
     2> "$TEMPFILE"

@@ -2,14 +2,17 @@ TERMUX_PKG_HOMEPAGE=https://invisible-island.net/ncurses/
 TERMUX_PKG_DESCRIPTION="Library for text-based user interfaces in a terminal-independent manner"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_VERSION=(6.2.20200725
-		    9.22
-		    15)
+		    9.26
+		    15
+		    0.20.3)
+TERMUX_PKG_REVISION=3
 TERMUX_PKG_SRCURL=(https://github.com/termux/distfiles/releases/download/2021.01.04/ncurses-${TERMUX_PKG_VERSION:0:3}-${TERMUX_PKG_VERSION:4}.tgz
 		   https://fossies.org/linux/misc/rxvt-unicode-${TERMUX_PKG_VERSION[1]}.tar.bz2
 		   https://github.com/thestinger/termite/archive/v${TERMUX_PKG_VERSION[2]}.tar.gz)
 TERMUX_PKG_SHA256=(05da39f964643b595bfdb874e52eabfd407c02d8fbed35602040735f4af9b09d
-		   e94628e9bcfa0adb1115d83649f898d6edb4baced44f5d5b769c2eeb8b95addd
-		   3ae9ebef28aad081c6c11351f086776e2fd9547563b2f900732b41c376bec05a)
+		   643116b9a25d29ad29f4890131796d42e6d2d21312282a613ef66c80c5b8c98b
+		   3ae9ebef28aad081c6c11351f086776e2fd9547563b2f900732b41c376bec05a
+		   7048cc0e6c17fe5ef3fbac18125dbd5f05d6c628838f004b8e2ad3546fb77d85)
 # ncurses-utils: tset/reset/clear are moved to package 'ncurses'.
 TERMUX_PKG_BREAKS="ncurses-dev, ncurses-utils (<< 6.1.20190511-4)"
 TERMUX_PKG_REPLACES="ncurses-dev, ncurses-utils (<< 6.1.20190511-4)"
