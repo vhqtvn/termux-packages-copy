@@ -1,6 +1,7 @@
 TERMUX_PKG_HOMEPAGE=https://proot-me.github.io/
 TERMUX_PKG_DESCRIPTION="Emulate chroot, bind mount and binfmt_misc for non-root users"
 TERMUX_PKG_LICENSE="GPL-2.0"
+TERMUX_PKG_MAINTAINER="@termux"
 # Just bump commit and version when needed:
 _COMMIT=a984f8edb5f82ff97584759fc55c061d6c9119f1
 TERMUX_PKG_VERSION=5.1.107
