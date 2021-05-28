@@ -1,4 +1,4 @@
-TERMUX_PKG_HOMEPAGE=https://curl.haxx.se/
+TERMUX_PKG_HOMEPAGE=https://curl.se/
 TERMUX_PKG_DESCRIPTION="Easy-to-use client-side URL transfer library"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@termux"

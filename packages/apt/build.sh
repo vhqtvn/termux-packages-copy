@@ -6,7 +6,7 @@ TERMUX_PKG_VERSION=2.3.5
 TERMUX_PKG_SRCURL=http://deb.debian.org/debian/pool/main/a/apt/apt_${TERMUX_PKG_VERSION}.tar.xz
 TERMUX_PKG_SHA256=7278d58ef73bef3569d800c176c1824a9913a641396573efc1c94116565cef9c
 # apt-key requires utilities from coreutils, findutils, gpgv, grep, sed.
-TERMUX_PKG_DEPENDS="coreutils, dpkg, findutils, gpgv, grep, libbz2, libc++, libcurl, liblzma, sed, termux-licenses, zlib"
+TERMUX_PKG_DEPENDS="coreutils, dpkg, findutils, gpgv, grep, libandroid-glob, libbz2, libc++, libcurl, libgnutls, liblz4, liblzma, sed, termux-licenses, xxhash, zlib"
 TERMUX_PKG_CONFLICTS="apt-transport-https, libapt-pkg"
 TERMUX_PKG_REPLACES="apt-transport-https, libapt-pkg"
 TERMUX_PKG_RECOMMENDS="game-repo, science-repo"
@@ -21,7 +21,7 @@ etc/apt/trusted.gpg
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DPERL_EXECUTABLE=$(command -v perl)
 -DCMAKE_INSTALL_FULL_LOCALSTATEDIR=$TERMUX_PREFIX
--DCACHE_DIR=/data/data/com.termux/cache/apt
+-DCACHE_DIR=${TERMUX_CACHE_DIR}/apt
 -DCOMMON_ARCH=$TERMUX_ARCH
 -DDPKG_DATADIR=$TERMUX_PREFIX/share/dpkg
 -DUSE_NLS=OFF
@@ -54,11 +54,10 @@ termux_step_pre_configure() {
 		termux_error_exit "Package '$TERMUX_PKG_NAME' is not safe for on-device builds."
 	fi
 
-	# Prefix verification patch should be applied only for the
-	# builds with original prefix.
-	if [ "$TERMUX_PREFIX" = "/data/data/com.termux/files/usr" ]; then
-		patch -p1 -i $TERMUX_PKG_BUILDER_DIR/0013-verify-prefix.patch.txt
-	fi
+	# Fix i686 builds.
+	CXXFLAGS+=" -Wno-c++11-narrowing"
+	# Fix glob() on Android 7.
+	LDFLAGS+=" -Wl,--no-as-needed -landroid-glob"
 }
 
 termux_step_post_make_install() {

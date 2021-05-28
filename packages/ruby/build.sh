@@ -13,7 +13,6 @@ TERMUX_PKG_BREAKS="ruby-dev"
 TERMUX_PKG_REPLACES="ruby-dev"
 # Needed to fix compilation on android:
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="ac_cv_func_setgroups=no ac_cv_func_setresuid=no ac_cv_func_setreuid=no --enable-rubygems --with-coroutine=copy"
-TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_type_size_t=yes"
 # The gdbm module seems to be very little used:
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --without-gdbm"
 # Do not link in libcrypt.so if available (now in disabled-packages):
@@ -28,13 +27,10 @@ termux_step_host_build() {
 	"$TERMUX_PKG_SRCDIR/configure" --prefix=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host
 	make -j $TERMUX_MAKE_PROCESSES
 	make install
-	export PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/bin:$PATH
 }
 
 termux_step_pre_configure() {
-	if [ "$(shasum /usr/lib/ruby/vendor_ruby/rubygems/defaults/operating_system.rb | awk '{print $1}')" == "96d8a66e0b70ed9f578218857edb8d47878eeb21" ]; then
-		sudo patch /usr/lib/ruby/vendor_ruby/rubygems/defaults/operating_system.rb "$TERMUX_PKG_BUILDER_DIR/host-patch/operating_system.rb.patch"
-	fi
+	export PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/bin:$PATH
 
 	if [ "$TERMUX_ARCH_BITS" = 32 ]; then
 		# process.c:function timetick2integer: error: undefined reference to '__mulodi4'

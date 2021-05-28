@@ -1,5 +1,6 @@
---- procps-3.3.17.orig/procio.c	2021-02-09 17:11:25.000000000 +0700
-+++ procps-3.3.17/procio.c	2021-05-12 00:03:30.000000000 +0700
+diff -u -r ../procps-ng-3.3.14/procio.c ./procio.c
+--- ../procps-ng-3.3.14/procio.c	2018-04-10 13:26:34.695269068 +0200
++++ ./procio.c	2018-05-19 03:03:48.858822656 +0200
 @@ -46,6 +46,7 @@
  static ssize_t proc_write(void *, const char *, size_t);
  static int proc_close(void *);
@@ -30,4 +31,3 @@
  }
  
  static
-diff -ru procps-3.3.17.orig/sysctl.c procps-3.3.17/sysctl.c

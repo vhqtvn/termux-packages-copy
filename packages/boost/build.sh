@@ -50,7 +50,6 @@ termux_step_make_install() {
 		--prefix="$TERMUX_PREFIX"  \
 		-q \
 		--without-stacktrace \
-		--without-log \
 		--disable-icu \
 		-sNO_ZSTD=1 \
 		cxxflags="$CXXFLAGS" \

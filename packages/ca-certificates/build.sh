@@ -1,4 +1,4 @@
-TERMUX_PKG_HOMEPAGE=https://curl.haxx.se/docs/caextract.html
+TERMUX_PKG_HOMEPAGE=https://curl.se/docs/caextract.html
 TERMUX_PKG_DESCRIPTION="Common CA certificates"
 TERMUX_PKG_LICENSE="GPL-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
