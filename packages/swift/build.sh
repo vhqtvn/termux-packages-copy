@@ -2,15 +2,14 @@ TERMUX_PKG_HOMEPAGE=https://swift.org/
 TERMUX_PKG_DESCRIPTION="Swift is a high-performance system programming language"
 TERMUX_PKG_LICENSE="Apache-2.0, NCSA"
 TERMUX_PKG_MAINTAINER="@buttaface"
-TERMUX_PKG_VERSION=5.3
-TERMUX_PKG_REVISION=2
+TERMUX_PKG_VERSION=5.4.1
 SWIFT_RELEASE="RELEASE"
 TERMUX_PKG_SRCURL=https://github.com/apple/swift/archive/swift-$TERMUX_PKG_VERSION-$SWIFT_RELEASE.tar.gz
-TERMUX_PKG_SHA256=f9e5bd81441c4ec13dd9ea290e2d7b8fe9b30ef66ad68947481022ea5179f83a
+TERMUX_PKG_SHA256=9634b9424cf8b4162e7bb7da44c475081019b1bce6b9f9d958b4780acfc0de85
 TERMUX_PKG_HOSTBUILD=true
 TERMUX_PKG_DEPENDS="binutils-gold, clang, libc++, ndk-sysroot, libandroid-glob, libandroid-spawn, libcurl, libicu, libicu-static, libsqlite, libuuid, libxml2, libdispatch, llbuild"
-TERMUX_PKG_BUILD_DEPENDS="cmake, ninja, perl, pkg-config, python2, rsync, libiconv"
-TERMUX_PKG_BLACKLISTED_ARCHES="i686, x86_64"
+TERMUX_PKG_BUILD_DEPENDS="cmake, ninja, perl, pkg-config, rsync"
+TERMUX_PKG_BLACKLISTED_ARCHES="i686"
 TERMUX_PKG_NO_STATICSPLIT=true
 
 SWIFT_COMPONENTS="autolink-driver;compiler;clang-resource-dir-symlink;swift-remote-mirror;parser-lib;license;sourcekit-inproc;stdlib;sdk-overlay"
@@ -25,20 +24,24 @@ fi
 
 termux_step_post_get_source() {
 	if [ "$TERMUX_PKG_QUICK_REBUILD" = "false" ]; then
-		# The Swift build-script requires a particular organization of source directories,
-		# which the following sets up.
+		# The Swift build-script requires a particular organization of source
+		# directories, which the following sets up.
 		mkdir .temp
 		mv [a-zA-Z]* .temp/
 		mv .temp swift
 
 		declare -A library_checksums
-		library_checksums[swift-cmark]=a1982e4407bc70a07c86e2cacf0727215d5eae82cdae9eacad32298f3e798b5c
-		library_checksums[llvm-project]=ccf263a8e8b82ae3d904d69ac37b7e239bf0511071540216e75cb2144d812446
-		library_checksums[swift-corelibs-libdispatch]=6805b555aab65d740fccaa99570fd29b32efa6c310fd42524913e44509dc4969
-		library_checksums[swift-corelibs-foundation]=f42906de3d21db10d7847786fc423c7d3318c70f6a31bb36ee172aff4fb9cdaf
-		library_checksums[swift-corelibs-xctest]=f12c8d26e2280f2aba7a9c69c9371050f936282114b4e4a5474625fec0ca8312
-		library_checksums[swift-llbuild]=6fddae33feb77cc13c797069cb91ac091af54cb6b267267f0de2bb45ceef1b78
-		library_checksums[swift-package-manager]=bc91ed638457bbf87317c610657c57c94715c7cb70ba680d9c6a067ff0962e06
+		library_checksums[swift-cmark]=2fc256d5c36915634f59accc55dd478cd10d18c7ba680e9df7cbb905188b3de3
+		library_checksums[llvm-project]=1afc3ca829031b3b5df58dc593cbe5cfac5b1044c1d9bc35ed1d3ed0cc093d03
+		library_checksums[swift-corelibs-libdispatch]=2435395ac2f572fccd996b0ea6a6a467301c05387cdd8db2edfd6a0055807dcc
+		library_checksums[swift-corelibs-foundation]=92b351d5b10b9c663137cdb608719f34ff919c9abfb8515d868f25b392d42cf6
+		library_checksums[swift-corelibs-xctest]=4215e1a00302dcec907033754735db9a7e9849767ebacf759ca6ff3e36f8b11d
+		library_checksums[swift-llbuild]=77dcf01c0b9351aba50f6ad9448dd8e1ad03d53e14c90b62c602616fd3adb0a1
+		library_checksums[swift-argument-parser]=6743338612be50a5a32127df0a3dd1c34e695f5071b1213f128e6e2b27c4364a
+		library_checksums[Yams]=8bbb28ef994f60afe54668093d652e4d40831c79885fa92b1c2cd0e17e26735a
+		library_checksums[swift-driver]=904b4f03ee68f8c022919e77c83cc263df0366a42fe6da6801531756b196bc56
+		library_checksums[swift-tools-support-core]=fa41540de20c9f8508b357040666a5a0a5bd6b280204321f5367b3af35aa9586
+		library_checksums[swift-package-manager]=36ed5dd26b71e7aec0cac2ae7c6624cc4b4c1fb313c68e03b4c8f6051ab5edc2
 
 		for library in "${!library_checksums[@]}"; do \
 			termux_download \
@@ -57,7 +60,7 @@ termux_step_post_get_source() {
 			termux_download \
 				https://swift.org/builds/swift-$TERMUX_PKG_VERSION-release/ubuntu2004/swift-$TERMUX_PKG_VERSION-$SWIFT_RELEASE/$SWIFT_BIN.tar.gz \
 				$TERMUX_PKG_CACHEDIR/$SWIFT_BIN.tar.gz \
-				acd424635c93cede10526d4de1e55bd429e30c14e85f75b5562397800ca5a685
+				2bc30169bd8a761a88b6ae2fb5bb7854f800e5dea7ff116d903347290d6b61f7
 		fi
 	fi
 	# The Swift compiler searches for the clang headers so symlink against them.

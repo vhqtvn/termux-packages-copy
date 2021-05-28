@@ -1,9 +1,10 @@
 TERMUX_PKG_HOMEPAGE=https://notmuchmail.org
 TERMUX_PKG_DESCRIPTION="Thread-based email index, search and tagging system"
 TERMUX_PKG_LICENSE="GPL-3.0"
-TERMUX_PKG_VERSION=0.31
+TERMUX_PKG_MAINTAINER="@termux"
+TERMUX_PKG_VERSION=0.32.1
 TERMUX_PKG_SRCURL=https://notmuchmail.org/releases/notmuch-${TERMUX_PKG_VERSION}.tar.xz
-TERMUX_PKG_SHA256=571fa0e1539c86612b1f2b2c80a398e08ecfef52e27ef7e48cf8e3b84fa18394
+TERMUX_PKG_SHA256=a747ca4e8cc919d91feda6cadb97e63b72ff79119491989bbcea79ad47680615
 TERMUX_PKG_DEPENDS="glib, libc++, libgmime, libtalloc, libxapian, zlib"
 TERMUX_PKG_BREAKS="notmuch-dev"
 TERMUX_PKG_REPLACES="notmuch-dev"
