@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://geth.ethereum.org/
 TERMUX_PKG_DESCRIPTION="Go implementation of the Ethereum protocol"
 TERMUX_PKG_LICENSE="LGPL-3.0"
 TERMUX_PKG_MAINTAINER="Leonid Pliushch <leonid.pliushch@gmail.com>"
-TERMUX_PKG_VERSION=1.9.21
+TERMUX_PKG_VERSION=1.10.3
 TERMUX_PKG_SRCURL=https://github.com/ethereum/go-ethereum/archive/v$TERMUX_PKG_VERSION.tar.gz
-TERMUX_PKG_SHA256=532ee58ab6e8505e455a4784f0a7e12297bd28691521209714be0eb4c317ecfd
+TERMUX_PKG_SHA256=693d202e3ee4a989c753ffd5032572621e3ee243eb344e6d0bfad5e2fe4ffa0d
 
 termux_step_make() {
 	termux_setup_golang
@@ -15,7 +15,7 @@ termux_step_make() {
 
 	cd "$GOPATH"/src/github.com/ethereum/go-ethereum
 	for applet in geth abigen bootnode ethkey evm rlpdump puppeth; do
-		(cd ./cmd/"$applet" && go build -mod=mod -v)
+		(cd ./cmd/"$applet" && go build -v)
 	done
 	unset applet
 }
