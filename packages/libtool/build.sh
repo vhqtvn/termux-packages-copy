@@ -1,6 +1,7 @@
 TERMUX_PKG_HOMEPAGE=https://www.gnu.org/software/libtool/
 TERMUX_PKG_DESCRIPTION="Generic library support script hiding the complexity of using shared libraries behind a consistent, portable interface"
 TERMUX_PKG_LICENSE="GPL-2.0"
+TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION=2.4.6
 TERMUX_PKG_REVISION=8
 TERMUX_PKG_SRCURL=https://mirrors.kernel.org/gnu/libtool/libtool-${TERMUX_PKG_VERSION}.tar.gz
@@ -11,6 +12,7 @@ TERMUX_PKG_REPLACES="libtool-dev, libtool-static"
 TERMUX_PKG_NO_STATICSPLIT=true
 
 termux_step_post_configure() {
+	# autoreconf failed, so i have to  patch aclocal version
 	find $TERMUX_PKG_BUILDDIR -iname Makefile -print0 | xargs -0 sed -i -e 's/aclocal-1.15/aclocal-1.16/' -e 's/automake-1.15/automake-1.16/'
 }
 

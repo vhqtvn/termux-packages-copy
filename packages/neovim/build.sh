@@ -1,8 +1,9 @@
 TERMUX_PKG_HOMEPAGE=https://neovim.io/
 TERMUX_PKG_DESCRIPTION="Ambitious Vim-fork focused on extensibility and agility (nvim)"
 TERMUX_PKG_LICENSE="Apache-2.0"
+TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION=0.4.4
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_REVISION=3
 TERMUX_PKG_SRCURL=https://github.com/neovim/neovim/archive/v${TERMUX_PKG_VERSION}.tar.gz
 TERMUX_PKG_SHA256=2f76aac59363677f37592e853ab2c06151cca8830d4b3fe4675b4a52d41fc42c
 TERMUX_PKG_DEPENDS="libiconv, libuv, luv, libmsgpack, libandroid-support, libvterm, libtermkey, liblua53, libunibilium"
@@ -24,17 +25,9 @@ TERMUX_PKG_CONFFILES="share/nvim/sysinit.vim"
 termux_step_host_build() {
 	termux_setup_cmake
 
-	# Temporal workaround for https://github.com/neovim/neovim/issues/14362
-	CURRENT_CMAKE=$(which cmake)
-	if [[ ! -f "$CURRENT_CMAKE.orig" ]]; then
-		mv "$CURRENT_CMAKE" "$CURRENT_CMAKE.orig"
-		ln -s $TERMUX_PKG_BUILDER_DIR/cmake-patched "$CURRENT_CMAKE"
-	fi
-
 	mkdir -p $TERMUX_PKG_HOSTBUILD_DIR/deps
 	cd $TERMUX_PKG_HOSTBUILD_DIR/deps
 	cmake $TERMUX_PKG_SRCDIR/third-party
-
 	make -j 1
 
 	cd $TERMUX_PKG_SRCDIR
@@ -51,4 +44,28 @@ termux_step_post_make_install() {
 	local _CONFIG_DIR=$TERMUX_PREFIX/share/nvim
 	mkdir -p $_CONFIG_DIR
 	cp $TERMUX_PKG_BUILDER_DIR/sysinit.vim $_CONFIG_DIR/
+}
+
+termux_step_create_debscripts() {
+	cat <<- EOF > ./postinst
+	#!$TERMUX_PREFIX/bin/sh
+	if [ "\$1" = "configure" ] || [ "\$1" = "abort-upgrade" ]; then
+		if [ -x "$TERMUX_PREFIX/bin/update-alternatives" ]; then
+			update-alternatives --install \
+				$TERMUX_PREFIX/bin/editor editor $TERMUX_PREFIX/bin/nvim 40
+			update-alternatives --install \
+				$TERMUX_PREFIX/bin/vi vi $TERMUX_PREFIX/bin/nvim 15
+		fi
+	fi
+	EOF
+
+	cat <<- EOF > ./prerm
+	#!$TERMUX_PREFIX/bin/sh
+	if [ "\$1" != "upgrade" ]; then
+		if [ -x "$TERMUX_PREFIX/bin/update-alternatives" ]; then
+			update-alternatives --remove editor $TERMUX_PREFIX/bin/nvim
+			update-alternatives --remove vi $TERMUX_PREFIX/bin/nvim
+		fi
+	fi
+	EOF
 }

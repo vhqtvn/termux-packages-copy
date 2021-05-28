@@ -10,14 +10,14 @@ termux_step_make() {
 	termux_setup_golang
 	export GOPATH=$TERMUX_PKG_BUILDDIR
 
-	mkdir -p $GOPATH/src/github.com/mholt/
-	cp -a $TERMUX_PKG_SRCDIR $GOPATH/src/github.com/mholt/caddy
+	mkdir -p $GOPATH/src/github.com/caddyserver/
+	cp -a $TERMUX_PKG_SRCDIR $GOPATH/src/github.com/caddyserver/caddy
 
-	cd $GOPATH/src/github.com/mholt/caddy/cmd/caddy
+	cd $GOPATH/src/github.com/caddyserver/caddy/cmd/caddy
 	export GO111MODULE=on
 	go build -v .
 }
 
 termux_step_make_install() {
-	install -Dm700 -t $TERMUX_PREFIX/bin $GOPATH/src/github.com/mholt/caddy/cmd/caddy/caddy
+	install -Dm700 -t $TERMUX_PREFIX/bin $GOPATH/src/github.com/caddyserver/caddy/cmd/caddy/caddy
 }
