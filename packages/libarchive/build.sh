@@ -17,3 +17,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --disable-acl
 --disable-xattr
 "
+
+termux_step_pre_configure() {
+	autoreconf -vfi
+}

@@ -6,6 +6,7 @@ case "$(uname -s)" in
 esac
 do_replace() {
     find . -path ./debs -prune -false -o \
+           -path ./debs-bk -prune -false -o \
            -path ./.git -prune -false -o \
            -path ./.github -prune -false -o \
            -type f | while read f; do

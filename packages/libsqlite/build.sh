@@ -24,6 +24,7 @@ ac_cv_func_strerror_r=no
 termux_step_pre_configure() {
 	CPPFLAGS+=" -Werror -DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_COLUMN_METADATA=1"
 	LDFLAGS+=" -lm"
+	autoreconf -vfi
 }
 
 termux_step_post_make_install() {

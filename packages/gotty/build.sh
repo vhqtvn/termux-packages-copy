@@ -15,8 +15,8 @@ termux_step_make() {
 	ln -sf "$TERMUX_PKG_SRCDIR" "$GOPATH"/src/github.com/yudai/gotty
 
 	cd "$GOPATH"/src/github.com/yudai/gotty
-	go mod init
-	go mod tidy
+	go mod init || go mod download
+	#go mod tidy
 	go build
 }
 

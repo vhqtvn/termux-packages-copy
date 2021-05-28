@@ -27,4 +27,5 @@ termux_step_pre_configure() {
 	# This is needed for find to implement support for the
 	# -fstype parameter by parsing /proc/self/mountinfo:
 	CPPFLAGS+=" -DMOUNTED_GETMNTENT1=1"
+	echo > gl/lib/nl_langinfo.c
 }

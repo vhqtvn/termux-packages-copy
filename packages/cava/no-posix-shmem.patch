@@ -1,13 +1,15 @@
-diff -uNr cava-0.7.0/cava.c cava-0.7.0.mod/cava.c
---- cava-0.7.0/cava.c	2020-05-26 23:29:47.000000000 +0300
-+++ cava-0.7.0.mod/cava.c	2020-06-20 22:57:21.423501150 +0300
-@@ -505,10 +505,12 @@
+--- ./cava.c.orig	2021-05-25 22:25:04.923392298 +0000
++++ ./cava.c	2021-05-25 22:26:07.547275790 +0000
+@@ -463,6 +463,7 @@
              audio.rate = 44100;
              break;
  #endif
 +#ifndef __ANDROID__
          case INPUT_SHMEM:
              thr_id = pthread_create(&p_thread, NULL, input_shmem, (void *)&audio);
+ 
+@@ -480,6 +481,7 @@
+             debug("got format: %d and rate %d\n", audio.format, audio.rate);
              // audio.rate = 44100;
              break;
 +#endif

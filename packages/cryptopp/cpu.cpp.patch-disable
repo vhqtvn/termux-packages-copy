@@ -1,0 +1,284 @@
+--- ./cpu.cpp.orig	2021-05-25 23:05:06.305112524 +0000
++++ ./cpu.cpp	2021-05-25 23:09:08.803710659 +0000
+@@ -55,7 +55,7 @@
+ // "$ANDROID_NDK_ROOT/sources/android/cpufeatures".
+ // setenv-android.sh will copy the header and source file
+ // into PWD and the makefile will build it in place.
+-#if defined(__ANDROID__)
++#if 0
+ # include "cpu-features.h"
+ #endif
+ 
+@@ -822,266 +822,68 @@
+ 
+ inline bool CPU_QueryARMv7()
+ {
+-#if defined(__ANDROID__) && defined(__arm__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_ARMv7) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__arm__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_ARMv7) != 0 ||
+-	    (getauxval(AT_HWCAP) & HWCAP_NEON) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__arm__)
+-	// Apple hardware is ARMv7 or above.
++#if defined(__arm__) || defined(__aarch32__) || defined(__aarch64__)
+ 	return true;
+-#endif
++#else
+ 	return false;
++#endif
+ }
+ 
+ inline bool CPU_QueryNEON()
+ {
+-#if defined(__ANDROID__) && defined(__aarch64__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_ASIMD) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__arm__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_NEON) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_ASIMD) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_ASIMD) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__arm__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_NEON) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__)
+-	// Core feature set for Aarch32 and Aarch64.
++#if defined(__arm__) || defined(__aarch32__) || defined(__aarch64__)
+ 	return true;
+-#endif
++#else
+ 	return false;
++#endif
+ }
+ 
+ inline bool CPU_QueryCRC32()
+ {
+-#if defined(__ANDROID__) && defined(__aarch64__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_CRC32) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__aarch32__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_CRC32) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_CRC32) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_CRC32) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__)
+-	// M1 processor
+-	if (IsAppleMachineARMv82())
+-		return true;
+-#endif
+ 	return false;
+ }
+ 
+ inline bool CPU_QueryPMULL()
+ {
+-#if defined(__ANDROID__) && defined(__aarch64__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_PMULL) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__aarch32__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_PMULL) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_PMULL) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_PMULL) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__)
+-	// M1 processor
+-	if (IsAppleMachineARMv82())
+-		return true;
+-#endif
+ 	return false;
+ }
+ 
+ inline bool CPU_QueryAES()
+ {
+-#if defined(__ANDROID__) && defined(__aarch64__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_AES) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__aarch32__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_AES) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_AES) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_AES) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__)
+-	return IsAppleMachineARMv8();
+-#endif
+ 	return false;
+ }
+ 
+ inline bool CPU_QuerySHA1()
+ {
+-#if defined(__ANDROID__) && defined(__aarch64__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_SHA1) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__aarch32__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_SHA1) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_SHA1) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_SHA1) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__)
+-	return IsAppleMachineARMv8();
+-#endif
+ 	return false;
+ }
+ 
+ inline bool CPU_QuerySHA256()
+ {
+-#if defined(__ANDROID__) && defined(__aarch64__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_SHA2) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__aarch32__)
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_SHA2) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_SHA2) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_SHA2) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__)
+-	return IsAppleMachineARMv8();
+-#endif
+ 	return false;
+ }
+ 
+ // Some ARMv8.2 features are disabled at the moment
+ inline bool CPU_QuerySHA3()
+ {
+-	// According to the ARM manual, SHA3 depends upon SHA1 and SHA2.
+-	// If SHA1 and SHA2 are not present, then SHA3 and SHA512 are
+-	// not present. Also see Arm A64 Instruction Set Architecture,
+-	// https://developer.arm.com/documentation/ddi0596/2020-12/
+-	if (!g_hasSHA1 || !g_hasSHA2) { return false; }
+-
+-#if defined(__ANDROID__) && defined(__aarch64__) && 0
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_SHA3) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__aarch32__) && 0
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_SHA3) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_SHA3) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_SHA3) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__)
+-	// M1 processor
+-	if (IsAppleMachineARMv82())
+-		return true;
+-#endif
+ 	return false;
+ }
+ 
+ // Some ARMv8.2 features are disabled at the moment
+ inline bool CPU_QuerySHA512()
+ {
+-	// According to the ARM manual, SHA512 depends upon SHA1 and SHA2.
+-	// If SHA1 and SHA2 are not present, then SHA3 and SHA512 are
+-	// not present. Also see Arm A64 Instruction Set Architecture,
+-	// https://developer.arm.com/documentation/ddi0596/2020-12/
+-	if (!g_hasSHA1 || !g_hasSHA2) { return false; }
+-
+-#if defined(__ANDROID__) && defined(__aarch64__) && 0
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_SHA512) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__aarch32__) && 0
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_SHA512) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_SHA512) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_SHA512) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__)
+-	// M1 processor
+-	if (IsAppleMachineARMv82())
+-		return true;
+-#endif
+ 	return false;
+ }
+ 
+ // Some ARMv8.2 features are disabled at the moment
+ inline bool CPU_QuerySM3()
+ {
+-#if defined(__ANDROID__) && defined(__aarch64__) && 0
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_SM3) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__aarch32__) && 0
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_SM3) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_SM3) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_SM3) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__) && 0
+-	// No Apple support yet.
+-#endif
+ 	return false;
+ }
+ 
+ // Some ARMv8.2 features are disabled at the moment
+ inline bool CPU_QuerySM4()
+ {
+-#if defined(__ANDROID__) && defined(__aarch64__) && 0
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM64) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM64_FEATURE_SM4) != 0))
+-		return true;
+-#elif defined(__ANDROID__) && defined(__aarch32__) && 0
+-	if (((android_getCpuFamily() & ANDROID_CPU_FAMILY_ARM) != 0) &&
+-		((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_SM4) != 0))
+-		return true;
+-#elif defined(__linux__) && defined(__aarch64__)
+-	if ((getauxval(AT_HWCAP) & HWCAP_SM4) != 0)
+-		return true;
+-#elif defined(__linux__) && defined(__aarch32__)
+-	if ((getauxval(AT_HWCAP2) & HWCAP2_SM4) != 0)
+-		return true;
+-#elif defined(__APPLE__) && defined(__aarch64__) && 0
+-	// No Apple support yet.
+-#endif
+ 	return false;
+ }
+ 

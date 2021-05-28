@@ -18,4 +18,6 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_func_mkfifoat=yes"
 termux_step_pre_configure() {
 	CPPFLAGS+=" -D__USE_FORTIFY_LEVEL=0"
 	LDFLAGS+=" -landroid-glob"
+	echo > gnu/nl_langinfo.c
+	autoreconf -vfi
 }

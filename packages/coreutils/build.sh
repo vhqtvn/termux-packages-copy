@@ -38,4 +38,6 @@ termux_step_pre_configure() {
 	if [ "$TERMUX_PREFIX" = "/data/data/com.termux/files/usr" ]; then
 		patch -p1 -i $TERMUX_PKG_BUILDER_DIR/verify-prefix.patch.txt
 	fi
+
+	echo > lib/nl_langinfo.c
 }

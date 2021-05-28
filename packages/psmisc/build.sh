@@ -9,3 +9,8 @@ TERMUX_PKG_DEPENDS="ncurses"
 TERMUX_PKG_ESSENTIAL=true
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_RM_AFTER_INSTALL="bin/pstree.x11"
+
+termux_step_pre_configure() {
+	sed -i 's/AC_FUNC_MALLOC//' configure.ac
+	sed -i 's/AC_FUNC_REALLOC//' configure.ac
+}

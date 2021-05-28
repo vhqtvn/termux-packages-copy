@@ -17,6 +17,7 @@ TERMUX_PKG_RM_AFTER_INSTALL="share/gnupg/help.*.txt share/man/man1/gpg-zip.1 sha
 
 termux_step_pre_configure() {
 	CPPFLAGS+=" -Ddn_skipname=__dn_skipname"
+	sed -i 's/\$SOURCE_DATE_EPOCH/${SOURCE_DATE_EPOC}/' ./doc/Makefile.*
 }
 
 termux_step_post_make_install() {
