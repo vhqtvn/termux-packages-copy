@@ -150,9 +150,10 @@ jobs:
       with:
         name: termux-packages-${{ github.sha }}
         path: ./
-    - name: Setup ssh key and known_hosts
+    - name: Upload to packages.termux.org
       env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        REPOSITORY_NAME: termux-main
+        REPOSITORY_DISTRIBUTION: stable
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.KNOWN_HOST_ENTRY }}" >> ~/.ssh/known_hosts
