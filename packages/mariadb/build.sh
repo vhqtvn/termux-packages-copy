@@ -71,7 +71,6 @@ TERMUX_PKG_BLACKLISTED_ARCHES="i686"
 
 termux_step_host_build() {
 	termux_setup_cmake
-	sed -i 's/^\s*END[(][)]/ENDIF()/g' $TERMUX_PKG_SRCDIR/libmariadb/cmake/ConnectorName.cmake
 	cmake -G "Unix Makefiles" \
 		$TERMUX_PKG_SRCDIR \
 		-DWITH_SSL=bundled \
@@ -96,7 +95,6 @@ termux_step_pre_configure() {
 		# Avoid undefined reference to __atomic_load_8:
 		CFLAGS+=" -latomic"
 	fi
-	sed -i 's/^\s*END[(][)]/ENDIF()/g' $TERMUX_PKG_SRCDIR/libmariadb/cmake/ConnectorName.cmake
 }
 
 termux_step_post_massage() {
