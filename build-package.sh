@@ -43,6 +43,8 @@ fi
 # lock file.
 : "${TERMUX_BUILD_IGNORE_LOCK:=false}"
 
+source "$TERMUX_SCRIPTDIR/scripts/vh-functions.sh"
+
 # Utility function to log an error message and exit with an error code.
 # shellcheck source=scripts/build/termux_error_exit.sh
 source "$TERMUX_SCRIPTDIR/scripts/build/termux_error_exit.sh"
@@ -361,6 +363,14 @@ while (($# > 0)); do
 		fi
 
 		termux_step_setup_variables
+		if test -f "$TERMUX_SCRIPTDIR/packages-vh-override/$TERMUX_PKG_NAME/build.sh"; then
+			echo "Loading vh overload"
+			VH_LOAD_OVERRIDE_SCRIPTS=(
+				"${TERMUX_PKG_BUILDER_SCRIPT}"
+				"$TERMUX_SCRIPTDIR/packages-vh-override/$TERMUX_PKG_NAME/build.sh"
+			)
+			TERMUX_PKG_BUILDER_SCRIPT="$TERMUX_SCRIPTDIR/scripts/vh-load-override-packages.sh"
+		fi
 		termux_step_handle_buildarch
 		termux_step_start_build
 		cd "$TERMUX_PKG_CACHEDIR"
