@@ -371,6 +371,7 @@ while (($# > 0)); do
 			)
 			TERMUX_PKG_BUILDER_SCRIPT="$TERMUX_SCRIPTDIR/scripts/vh-load-override-packages.sh"
 		fi
+		set -o xtrace
 		termux_step_handle_buildarch
 		termux_step_start_build
 		cd "$TERMUX_PKG_CACHEDIR"
