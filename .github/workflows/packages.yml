@@ -6,9 +6,11 @@ on:
     - master
     paths:
     - 'packages/**'
+    - 'packages-vh-override/**'
   pull_request:
     paths:
     - 'packages/**'
+    - 'packages-vh-override/**'
 
 jobs:
   build:
@@ -95,6 +97,33 @@ jobs:
               # If there are subpackages we want to create a list of those
               # as well
               for file in $(find "packages/${pkg}/" -maxdepth 1 -type f -name \*.subpackage.sh | sort); do
+                echo "$(basename "${file%%.subpackage.sh}")" >> ./built_subpackages.txt
+              done
+            fi
+          fi
+        done<<<${CHANGED_FILES}
+        while read -r file; do
+          if ! [[ $file == packages-vh-override/* ]]; then
+            # This file does not belong to a package, so ignore it
+            continue
+          fi
+          if [[ $file =~ ^packages-vh-override/([a-z0-9-]*)/([a-z0-9-]*).subpackage.sh$ ]]; then
+            # A subpackage was modified, check if it was deleted or just updated
+            pkg=${BASH_REMATCH[1]}
+            subpkg=${BASH_REMATCH[2]}
+            if [ ! -f "packages/${pkg}/${subpkg}.subpackage.sh" ]; then
+              echo "$subpkg" >> ./deleted_packages.txt
+            fi
+          elif [[ $file =~ ^packages-vh-override/([a-z0-9-]*)/.*$ ]]; then
+            # package, check if it was deleted or updated
+            pkg=${BASH_REMATCH[1]}
+            if [ ! -d "packages/${pkg}" ]; then
+              echo "$pkg" >> ./deleted_packages.txt
+            else
+              echo "$pkg" >> ./built_packages.txt
+              # If there are subpackages we want to create a list of those
+              # as well
+              for file in $(find "packages-vh-override/${pkg}/" -maxdepth 1 -type f -name \*.subpackage.sh | sort); do
                 echo "$(basename "${file%%.subpackage.sh}")" >> ./built_subpackages.txt
               done
             fi
