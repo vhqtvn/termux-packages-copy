@@ -1,0 +1,3 @@
+if [[ "$TERMUX_PKG_VERSION" == "5.8.0" ]]; then
+    TERMUX_PKG_SHA256=59c86d5b2e452f63c5cdb29c866a12a4c55b1741d7025cf2f3ce0cde99b0660e
+fi
