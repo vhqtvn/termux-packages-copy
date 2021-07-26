@@ -49,6 +49,9 @@ if [ -f "${BASEDIR}/github-projects.txt" ]; then
 			latest_version=$(grep -oP "$version_regexp" <<< "$latest_version")
 		fi
 
+		# Translate "_" into ".".
+		latest_version=${latest_version//_/.}
+
 		# We have no better choice for comparing versions.
 		if [ "$(echo -e "${termux_version}\n${latest_version}" | sort -V | head -n 1)" != "$latest_version" ] ;then
 			if [ "$BUILD_PACKAGES" = "false" ]; then
@@ -65,7 +68,8 @@ if [ -f "${BASEDIR}/github-projects.txt" ]; then
 				}
 
 				echo "Trying to build package '${package}'."
-				if "${BASEDIR}/../run-docker.sh" ./build-package.sh -a aarch64 -I "$package"; then
+				if "${BASEDIR}/../run-docker.sh" ./build-package.sh -a aarch64 -I "$package" && \
+					"${BASEDIR}/../run-docker.sh" ./build-package.sh -a arm -I "$package"; then
 					if [ "$GIT_COMMIT_PACKAGES" = "true" ]; then
 						git add "${BASEDIR}/../../packages/${package}"
 						git commit -m "$(echo -e "${package}: update to ${latest_version}\n\nThis commit has been automatically submitted by Github Actions.")"
