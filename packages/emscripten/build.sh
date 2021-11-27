@@ -2,7 +2,7 @@ TERMUX_PKG_HOMEPAGE=https://emscripten.org
 TERMUX_PKG_DESCRIPTION="Emscripten: An LLVM-to-WebAssembly Compiler"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@truboxl"
-TERMUX_PKG_VERSION=2.0.34
+TERMUX_PKG_VERSION=3.0.0
 TERMUX_PKG_SRCURL=https://github.com/emscripten-core/emscripten.git
 TERMUX_PKG_GIT_BRANCH=$TERMUX_PKG_VERSION
 TERMUX_PKG_PLATFORM_INDEPENDENT=true
@@ -21,10 +21,21 @@ opt/emscripten-llvm/bin/clang-extdef-mapping
 opt/emscripten-llvm/bin/clang-format
 opt/emscripten-llvm/bin/clang-func-mapping
 opt/emscripten-llvm/bin/clang-import-test
+opt/emscripten-llvm/bin/clang-nvlink-wrapper
 opt/emscripten-llvm/bin/clang-offload-bundler
+opt/emscripten-llvm/bin/clang-offload-wrapper
 opt/emscripten-llvm/bin/clang-refactor
+opt/emscripten-llvm/bin/clang-repl
 opt/emscripten-llvm/bin/clang-rename
 opt/emscripten-llvm/bin/clang-scan-deps
+opt/emscripten-llvm/bin/diagtool
+opt/emscripten-llvm/bin/git-clang-format
+opt/emscripten-llvm/bin/hmaptool
+opt/emscripten-llvm/bin/llvm-cov
+opt/emscripten-llvm/bin/llvm-ml
+opt/emscripten-llvm/bin/llvm-profdata
+opt/emscripten-llvm/bin/llvm-rc
+opt/emscripten-llvm/bin/llvm-strip
 opt/emscripten-llvm/bin/ld.lld
 opt/emscripten-llvm/bin/ld64.lld
 opt/emscripten-llvm/bin/ld64.lld.darwin*
@@ -50,13 +61,13 @@ opt/emscripten/LICENSE
 
 # https://github.com/emscripten-core/emscripten/issues/11362
 # can switch to stable LLVM to save space once above is fixed
-LLVM_COMMIT=3d39612b3dd3f6b67ee63da305d30606abbe7287
-LLVM_TGZ_SHA256=f522d3dcd3c448cef661f8f7a4d2da2296f9634eee63f203b04ae5a8147b5e0e
+LLVM_COMMIT=4348cd42c385e71b63e5da7e492172cff6a79d7b
+LLVM_TGZ_SHA256=52e110f9d1a196b596c235393739bb6967ecdb1bda5ffc90d0fa700d599b2c59
 
 # https://github.com/emscripten-core/emscripten/issues/12252
 # upstream says better bundle the right binaryen revision for now
-BINARYEN_COMMIT=ab66e9ab1210a87d1db8ebe93cf8463eafe34e33
-BINARYEN_TGZ_SHA256=23a8429c91be77892b54d368b3eb8d19d82cfd537067f0bde42da03268eb9a2b
+BINARYEN_COMMIT=76327e47119c2b4c24a3382d31000cdcc67c7a13
+BINARYEN_TGZ_SHA256=1b136f7084e9cf2fa30349fed44476e341b56120e817d82b969f75aa21abef3d
 
 # https://github.com/emscripten-core/emsdk/blob/main/emsdk.py
 # https://chromium.googlesource.com/emscripten-releases/+/refs/heads/main/src/build.py
@@ -116,7 +127,7 @@ termux_step_post_get_source() {
 	tar -xf "$TERMUX_PKG_CACHEDIR/binaryen.tar.gz" -C "$TERMUX_PKG_CACHEDIR"
 
 	cd "$TERMUX_PKG_CACHEDIR/llvm-project-$LLVM_COMMIT"
-	for patch in $TERMUX_PKG_BUILDER_DIR/*.patch.diff; do
+	for patch in $TERMUX_PKG_BUILDER_DIR/llvm-project-*.patch.diff; do
 		patch -p1 -i "$patch"
 	done
 }
@@ -203,9 +214,15 @@ termux_step_make_install() {
 	install -Dm644 "$TERMUX_PKG_TMPDIR/emscripten.sh" "$TERMUX_PREFIX/etc/profile.d/emscripten.sh"
 
 	# add useful tools not installed by LLVM_INSTALL_TOOLCHAIN_ONLY=ON
-	for tool in FileCheck llc llvm-{as,dis,link,mc,nm,objdump,readobj,size,dwarfdump,dwp} opt; do
+	for tool in llc llvm-{addr2line,dwarfdump,dwp,link,nm,objdump,readobj,size} opt; do
 		install -Dm755 "$TERMUX_PKG_CACHEDIR/build-llvm/bin/$tool" "$TERMUX_PREFIX/opt/emscripten-llvm/bin/$tool"
 	done
+
+	# wasm32 triplets
+	ln -fsT "clang"   "$TERMUX_PREFIX/opt/emscripten-llvm/bin/wasm32-clang"
+	ln -fsT "clang++" "$TERMUX_PREFIX/opt/emscripten-llvm/bin/wasm32-clang++"
+	ln -fsT "clang"   "$TERMUX_PREFIX/opt/emscripten-llvm/bin/wasm32-wasi-clang"
+	ln -fsT "clang++" "$TERMUX_PREFIX/opt/emscripten-llvm/bin/wasm32-wasi-clang++"
 
 	# unable to determine the reason why different linker searches for
 	# libclang_rt.builtins-*-android.a in different paths even after adding
@@ -234,15 +251,8 @@ termux_step_create_debscripts() {
 	If you are upgrading, you may want to clear the
 	cache by running the command below to fix issues.
 
-	emcc --clear-cache'
-	if [ -d "$TERMUX_PREFIX/lib/emscripten" ]; then
-	echo '
-	Note: The old Emscripten path has been deprecated.
-	To delete, simply run the command below.
+	emcc --clear-cache
 
-	rm -fr $TERMUX_PREFIX/lib/emscripten'
-	fi
-	echo '
 	===================='
 	EOF
 
