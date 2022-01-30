@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Git clone
         uses: actions/checkout@v2
+      - name: Patch
+        run: ./patch-repo.sh
       - name: Create bootstrap archive
         run: ./scripts/generate-bootstraps.sh --repository https://vsc.vhn.vn/termux-packages-24/ --architectures ${{ matrix.arch }}
       - name: Store artifacts
