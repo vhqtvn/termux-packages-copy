@@ -1,4 +1,4 @@
-name: Generate bootstrap archives
+name: Generate bootstrap archives (trigger: 1)
 
 on:
   push:
