@@ -14,7 +14,7 @@ termux_download_deb_pac() {
 
 	local DEB_FILE="${PACKAGE}_${VERSION}_${PACKAGE_ARCH}.deb"
 
-	if [ -f "$TERMUX_DEBDIR/$DEB_FILE" ]; then
+	if [ -z ${TERMUX_DEBDIR+x} ] && [ -f "$TERMUX_DEBDIR/$DEB_FILE" ]; then
 		cp "$TERMUX_DEBDIR/$DEB_FILE" "${TERMUX_COMMON_CACHEDIR}-${PACKAGE_ARCH}/${DEB_FILE}"
 		return 0
 	fi
