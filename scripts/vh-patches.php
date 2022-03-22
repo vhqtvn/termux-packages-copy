@@ -1,7 +1,7 @@
 <?php
 
 if ($argv[1] === 'patch') {
-    if (in_array($argv[2], ['--reverse', '-r'])) {
+    if (!in_array(@$argv[2], ['--reverse', '-r'])) {
         $s = file_get_contents($fn = __DIR__ . "/../build-package.sh");
         $s = must_replace('if ! $TERMUX_BUILD_IGNORE_LOCK; then', '( if ! $TERMUX_BUILD_IGNORE_LOCK; then', $s);
         $s = must_replace('termux_step_finish_build', 'termux_step_finish_build ) || true', $s);
