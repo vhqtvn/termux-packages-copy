@@ -27,8 +27,14 @@ if [[ "$1" == "--reverse" ]] || [[ "$1" == "-r" ]]; then
     fi
     do_replace 's#vn[.]vhn[.]vsc#com.t''ermux#g'
     do_replace 's#csv[.]nhv[.]nv#xumre''t.moc#g'
+    if [[ -f scripts/vh-patches.php ]]; then
+        php scripts/vh-patches.php patch --reverse
+    fi
 else
     echo "* Replace termux->vsc in $(pwd)"
+    if [[ -f scripts/vh-patches.php ]]; then
+        php scripts/vh-patches.php patch
+    fi
     if [[ -f scripts/build/termux_step_setup_variables.sh ]]; then
         if [[ ! -f scripts/build/termux_step_setup_variables.sh.~ ]]; then
             cp scripts/build/termux_step_setup_variables.sh scripts/build/termux_step_setup_variables.sh.~

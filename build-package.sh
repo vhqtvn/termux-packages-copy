@@ -399,7 +399,7 @@ for ((i=0; i<${#PACKAGE_LIST[@]}; i++)); do
 	#
 	# To provide sane environment for each package, builds are done
 	# in subshell.
-	((
+	(
 		if ! $TERMUX_BUILD_IGNORE_LOCK; then
 			flock -n 5 || termux_error_exit "Another build is already running within same environment."
 		fi
@@ -510,5 +510,5 @@ for ((i=0; i<${#PACKAGE_LIST[@]}; i++)); do
 			termux_error_exit "Unknown packaging format '$TERMUX_PACKAGE_FORMAT'."
 		fi
 		termux_step_finish_build
-	) || true) 5< "$TERMUX_BUILD_LOCK_FILE"
+	) 5< "$TERMUX_BUILD_LOCK_FILE"
 done
