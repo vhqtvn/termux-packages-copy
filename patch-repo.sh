@@ -37,7 +37,8 @@ else
             | LC_CTYPE=C LC_ALL=C LANG=C sed -e "s#TERMUX_BUILD_TUPLE=#TERMUX_REPO_URL=(\nhttps://vsc.vhn.vn/termux-packages-24\n)\nTERMUX_REPO_DISTRIBUTION=(\nstable\n)\nTERMUX_REPO_COMPONENT=(\nstable\n)\nTERMUX_BUILD_TUPLE=#g" \
             > scripts/build/termux_step_setup_variables.sh
     else
-        find . -iname nl_langinfo.c -exec cp /dev/null {} \;
+        #find . -iname nl_langinfo.c -exec cp /dev/null {} \;
+	true
     fi
     do_replace 's#com[.]termux#vn.vh''n.vsc#g'
     do_replace 's#xumret[.]moc#csv.nh''v.nv#g'

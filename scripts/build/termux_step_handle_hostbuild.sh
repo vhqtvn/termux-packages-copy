@@ -8,7 +8,7 @@ termux_step_handle_hostbuild() {
 		test -f "$patch" && sed "s%\@TERMUX_PREFIX\@%${TERMUX_PREFIX}%g" "$patch" | patch --silent -p1
 	done
 
-	if [ ! -f "$TERMUX_HOSTBUILD_MARKER" ]; then
+	if true || [ ! -f "$TERMUX_HOSTBUILD_MARKER" ]; then
 		rm -Rf "$TERMUX_PKG_HOSTBUILD_DIR"
 		mkdir -p "$TERMUX_PKG_HOSTBUILD_DIR"
 		cd "$TERMUX_PKG_HOSTBUILD_DIR"

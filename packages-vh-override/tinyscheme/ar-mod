@@ -1,0 +1,8 @@
+#!/bin/bash
+
+ORIG_AR=$1
+shift
+if [[ "$1" -eq "cr" ]]; then
+  shift
+fi
+$ORIG_AR crs "$@"

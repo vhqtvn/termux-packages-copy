@@ -8,7 +8,7 @@ Session.vim
 .secrets
 .vscode
 .history
-vh-tmp-*
+vh-tmp*
 
 # Vagrant
 scripts/*.log

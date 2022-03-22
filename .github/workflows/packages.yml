@@ -36,6 +36,7 @@ jobs:
       run: ./patch-repo.sh
     - name: Build
       run: |
+        TERMUX_BUILDER_IMAGE_NAME=vanhoavn/vheditor-package-builder
         BASE_COMMIT=$(jq --raw-output .pull_request.base.sha "$GITHUB_EVENT_PATH")
         OLD_COMMIT=$(jq --raw-output .commits[0].id "$GITHUB_EVENT_PATH")
         HEAD_COMMIT=$(jq --raw-output .commits[-1].id "$GITHUB_EVENT_PATH")
