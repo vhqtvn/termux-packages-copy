@@ -3,22 +3,22 @@
 if [ "$1" == "--help" ] || [ "$1" == "-help" ]; then
     echo "Script for redirecting subscribed repositories to mirrors."
     echo "You can choose between mirrors listed at"
-    echo "https://github.com/termux/termux-packages/wiki/Mirrors"
+    echo "https://github.com/termux/termux-packages/wiki/Info-about-mirrors#mirrors"
     exit 0
 fi
 
 select_repository() {
-    if [ "$1" == "Default repositories" ]; then
-        echo "[*] Termux primary host (EU) selected"
-        MAIN="https://packages.termux.org/apt/termux-main"
-        ROOT="https://packages.termux.org/apt/termux-root"
-        X11="https://packages.termux.org/apt/termux-x11"
-
-    elif [ "$1" == "Default repositories (CF)" ]; then
+    if [ "$1" == "Default repositories (CF)" ]; then
         echo "[*] Termux primary host (worldwide) selected"
         MAIN="https://packages-cf.termux.org/apt/termux-main"
         ROOT="https://packages-cf.termux.org/apt/termux-root"
         X11="https://packages-cf.termux.org/apt/termux-x11"
+
+    elif [ "$1" == "Default repositories" ]; then
+        echo "[*] Termux primary host (EU) selected"
+        MAIN="https://packages.termux.org/apt/termux-main"
+        ROOT="https://packages.termux.org/apt/termux-root"
+        X11="https://packages.termux.org/apt/termux-x11"
 
     elif [ "$1" == "GH Mirrors by Kcubeterm" ]; then
         echo "[*] GH mirrors selected"
@@ -92,6 +92,12 @@ select_repository() {
         ROOT="https://mirrors.ustc.edu.cn/termux/apt/termux-root"
         X11="https://mirrors.ustc.edu.cn/termux/apt/termux-x11"
 
+    elif [ "$1" == "Mirrors by HIT" ]; then
+        echo "[*] HIT (CN) mirrors selected"
+        MAIN="https://mirrors.hit.edu.cn/termux/apt/termux-main"
+        ROOT="https://mirrors.hit.edu.cn/termux/apt/termux-root"
+        X11="https://mirrors.hit.edu.cn/termux/apt/termux-x11"
+
     else
         echo "[!] Error: unknown repository: '$1'. Exiting"
         exit 1
@@ -135,8 +141,8 @@ dialog \
     "${REPOSITORIES[@]}" --and-widget \
     --title "termux-change-repo" --clear \
     --radiolist "Which mirror do you want to use?" 0 0 0 \
-    "Default repositories" "Default host" on \
     "Default repositories (CF)" "Default host with CloudFlare endpoint" on \
+    "Default repositories" "Default host" off \
     "GH Mirrors by Kcubeterm" "Hosted on Github Release" off \
     "Mirrors by A1batross" "Hosted on termux.mentality.rip" off \
     "Mirrors by Astra ISP" "Hosted on termux.astra.in.ua" off \
@@ -149,6 +155,7 @@ dialog \
     "Mirrors by BFSU" "Hosted on mirrors.bfsu.edu.cn" off \
     "Mirrors by NJU" "Hosted on mirror.nju.edu.cn" off \
     "Mirrors by USTC" "Hosted on mirrors.ustc.edu.cn" off \
+    "Mirrors by HIT" "Hosted on mirrors.hit.edu.cn" off \
     2> "$TEMPFILE"
 
 retval=$?
