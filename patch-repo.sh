@@ -40,7 +40,7 @@ else
             cp scripts/build/termux_step_setup_variables.sh scripts/build/termux_step_setup_variables.sh.~
         fi
         cat scripts/build/termux_step_setup_variables.sh.~ \
-            | LC_CTYPE=C LC_ALL=C LANG=C sed -e "s#TERMUX_BUILD_TUPLE=#TERMUX_REPO_URL=(\nhttps://vsc.vhn.vn/termux-packages-24\n)\nTERMUX_REPO_DISTRIBUTION=(\nstable\n)\nTERMUX_REPO_COMPONENT=(\nstable\n)\nTERMUX_BUILD_TUPLE=#g" \
+            | LC_CTYPE=C LC_ALL=C LANG=C sed -e "s#TERMUX_BUILD_TUPLE=#TERMUX_REPO_URL=(\nhttps://vsc.vhn.vn/termux-packages-24\n)\nTERMUX_REPO_DISTRIBUTION=(\nstable\n)\nTERMUX_REPO_COMPONENT=(\nmain\n)\nTERMUX_BUILD_TUPLE=#g" \
             > scripts/build/termux_step_setup_variables.sh
     else
         #find . -iname nl_langinfo.c -exec cp /dev/null {} \;
