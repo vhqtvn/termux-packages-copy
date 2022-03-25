@@ -42,7 +42,7 @@ fi
 
 am broadcast --user 0 \
 	-a $ACTION \
-	-n vn.vhn.vsc/vn.vhn.vsc.app.TermuxOpenReceiver \
+	-n com.termux/com.termux.app.TermuxOpenReceiver \
 	$EXTRAS \
 	-d "$FILE" \
 	> /dev/null

@@ -1,2 +1,2 @@
-#!/data/data/vn.vhn.vsc/files/usr/bin/sh
-export PATH=/data/data/vn.vhn.vsc/files/usr/opt/rustc-nightly/bin:$PATH
+#!/data/data/com.termux/files/usr/bin/sh
+export PATH=/data/data/com.termux/files/usr/opt/rustc-nightly/bin:$PATH

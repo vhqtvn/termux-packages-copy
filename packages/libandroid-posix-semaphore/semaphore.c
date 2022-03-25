@@ -44,7 +44,7 @@
 #endif // !SEM_NSEMS_MAX
 
 #ifndef PREFIX
-#define PREFIX "/data/data/vn.vhn.vsc/files/usr"
+#define PREFIX "/data/data/com.termux/files/usr"
 #endif
 #define SEM_PREFIX PREFIX"/tmp/sem."
 
