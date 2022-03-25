@@ -8,6 +8,6 @@ fi
 
 am startservice \
 	--user 0 \
-	-a com.termux.service_wake_lock \
-	com.termux/com.termux.app.TermuxService \
+	-a vn.vhn.vsc.service_wake_lock \
+	vn.vhn.vsc/vn.vhn.vsc.app.TermuxService \
 	> /dev/null
