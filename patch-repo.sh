@@ -51,17 +51,16 @@ else
         #find . -iname nl_langinfo.c -exec cp /dev/null {} \;
     	true
     fi
-    if [[ -f scripts/build/termux_get_repo_files.sh ]]; then
-        if [[ ! -f scripts/build/termux_get_repo_files.sh.~ ]]; then
-            cp scripts/build/termux_get_repo_files.sh scripts/build/termux_get_repo_files.sh.~
+    for ff in scripts/build/termux_download_deb_pac.sh scripts/build/termux_get_repo_files.sh; do
+        if [[ -f $ff ]]; then
+            if [[ ! -f $ff.~ ]]; then
+                cp $ff $ff.~
+            fi
+            cat $ff.~ \
+                | LC_CTYPE=C LC_ALL=C LANG=C sed -e "s#get_hash_from_file#vh_get_hash_single_from_file#g" \
+                > $ff
         fi
-        cat scripts/build/termux_get_repo_files.sh.~ \
-            | LC_CTYPE=C LC_ALL=C LANG=C sed -e "s#get_hash_from_file#vh_get_hash_single_from_file#g" \
-            > scripts/build/termux_get_repo_files.sh
-    else
-        #find . -iname nl_langinfo.c -exec cp /dev/null {} \;
-    	true
-    fi
+    done
     do_replace 's#com[.]termux#vn.vh''n.vsc#g'
     do_replace 's#xumret[.]moc#csv.nh''v.nv#g'
 fi
