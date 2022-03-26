@@ -10,19 +10,25 @@ def get_pkg_hash_from_Packages(Packages_file, package, version, hash="SHA256"):
         package_list = Packages.read().split('\n\n')
     for pkg in package_list:
         if pkg.split('\n')[0] == "Package: "+package:
-            gcontent = ''
+            xgcontent = ''
+            has_version = False
+            has_name = False
             for line in pkg.split('\n'):
                 # Assuming Filename: comes before Version:
                 if line.startswith('Filename:'):
-                    gcontent += line.split(" ")[1] + " " + "\n"
+                    xgcontent += line.split(" ")[1] + " " + "\n"
+                    has_name = True
                 elif line.startswith('Version:'):
                     if line != 'Version: '+version:
                         # Seems the repo contains the wrong version, or several versions
                         # We can't use this one so continue looking
                         break
                 elif line.startswith(hash):
-                    gcontent += line.split(" ")[1] + "\n"
+                    xgcontent += line.split(" ")[1] + "\n"
+                    has_version = True
                     break
+            if has_name and has_version:
+                gcontent = xgcontent
 
 def get_Packages_hash_from_Release(Release_file, arch, component, hash="SHA256"):
     global gcontent
