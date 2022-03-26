@@ -1,0 +1,13 @@
+--- ../src-orig/src/main/configure.c	2022-03-26 18:03:30.158304167 +0000
++++ ./src/main/configure.c	2022-03-26 19:02:04.777562073 +0000
+@@ -506,8 +506,8 @@
+ 			        pkg_name(pkg, pnaw_nonambig), cdr2.buf,
+ 			        strerror(errno));
+ 		if (!(what & CFOF_USER_DEL))
+-			if (link(cdr.buf, cdr2.buf))
+-				warning(_("%s: failed to link '%.250s' to '%.250s': %s"),
++			if (rename(cdr.buf, cdr2.buf))
++				warning(_("%s: failed to rename '%.250s' to '%.250s': %s"),
+ 				        pkg_name(pkg, pnaw_nonambig), cdr.buf,
+ 				        cdr2.buf, strerror(errno));
+ 		/* Fall through. */

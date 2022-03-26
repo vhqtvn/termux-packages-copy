@@ -1,0 +1,13 @@
+--- ../src-orig/src/main/help.c	2022-03-26 18:03:30.158304167 +0000
++++ ./src/main/help.c	2022-03-26 19:03:15.638401054 +0000
+@@ -127,8 +127,10 @@
+     "update_dyld_shared_cache",
+ #elif defined(__GLIBC__) || defined(__UCLIBC__) || \
+       defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
++#ifndef __ANDROID__
+     "ldconfig",
+ #endif
++#endif
+ #if BUILD_START_STOP_DAEMON
+     "start-stop-daemon",
+ #endif
