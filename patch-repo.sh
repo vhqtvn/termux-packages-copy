@@ -25,6 +25,11 @@ if [[ "$1" == "--reverse" ]] || [[ "$1" == "-r" ]]; then
             cp scripts/build/termux_step_setup_variables.sh.~ scripts/build/termux_step_setup_variables.sh
         fi
     fi
+    if [[ -f scripts/build/termux_get_repo_files.sh ]]; then
+        if [[ -f scripts/build/termux_get_repo_files.sh.~ ]]; then
+            cp scripts/build/termux_get_repo_files.sh.~ scripts/build/termux_get_repo_files.sh
+        fi
+    fi
     do_replace 's#vn[.]vhn[.]vsc#com.t''ermux#g'
     do_replace 's#csv[.]nhv[.]nv#xumre''t.moc#g'
     if [[ -f scripts/vh-patches.php ]]; then
@@ -44,7 +49,18 @@ else
             > scripts/build/termux_step_setup_variables.sh
     else
         #find . -iname nl_langinfo.c -exec cp /dev/null {} \;
-	true
+    	true
+    fi
+    if [[ -f scripts/build/termux_get_repo_files.sh ]]; then
+        if [[ ! -f scripts/build/termux_get_repo_files.sh.~ ]]; then
+            cp scripts/build/termux_get_repo_files.sh scripts/build/termux_get_repo_files.sh.~
+        fi
+        cat scripts/build/termux_get_repo_files.sh.~ \
+            | LC_CTYPE=C LC_ALL=C LANG=C sed -e "s#get_hash_from_file#vh_get_hash_single_from_file#g" \
+            > scripts/build/termux_get_repo_files.sh
+    else
+        #find . -iname nl_langinfo.c -exec cp /dev/null {} \;
+    	true
     fi
     do_replace 's#com[.]termux#vn.vh''n.vsc#g'
     do_replace 's#xumret[.]moc#csv.nh''v.nv#g'
