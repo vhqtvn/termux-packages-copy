@@ -7,11 +7,13 @@ set -e
 
 cd "$(realpath "$(dirname "$0")")"
 TERMUX_SCRIPTDIR=$(cd .. && pwd)
-export TERMUX_SCRIPTDIR
 
 . $(dirname "$(realpath "$0")")/properties.sh
 BOOTSTRAP_TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/bootstrap-tmp.XXXXXXXX")
 trap 'rm -rf $BOOTSTRAP_TMPDIR' EXIT
+
+TERMUX_PKG_TMPDIR=/tmp
+export TERMUX_PKG_TMPDIR
 
 # By default, bootstrap archives are compatible with Android >=7.0
 # and <10.
