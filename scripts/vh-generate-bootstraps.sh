@@ -286,12 +286,14 @@ done
 
 source "$TERMUX_SCRIPTDIR/scripts/build/termux_download.sh"
 
+TERMUX_ELF_CLEANER=$TERMUX_PKG_TMPDIR/elf-cleaner
+export TERMUX_ELF_CLEANER
 termux_download \
 	"https://raw.githubusercontent.com/termux/termux-elf-cleaner/v1.10/termux-elf-cleaner.cpp" \
 	"/tmp/elf-cleaner.cpp" \
 	SKIP_CHECKSUM
 g++ -std=c++11 -Wall -Wextra -pedantic -Os -D__ANDROID_API__=24 \
-	"/tmp/elf-cleaner.cpp" -o "/tmp/elf-cleaner"
+	"$TERMUX_PKG_TMPDIR/elf-cleaner.cpp" -o "$TERMUX_ELF_CLEANER"
 
 for package_arch in "${TERMUX_ARCHITECTURES[@]}"; do
 	BOOTSTRAP_ROOTFS="$BOOTSTRAP_TMPDIR/rootfs-${package_arch}"
