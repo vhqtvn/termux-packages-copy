@@ -194,6 +194,7 @@ create_bootstrap_archive() {
 	)
 
 	mv -f "${BOOTSTRAP_TMPDIR}/bootstrap-${1}.zip" ./
+	ls -la ./
 	echo "[*] Finished successfully (${1})."
 }
 
