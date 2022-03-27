@@ -25,11 +25,13 @@ if [[ "$1" == "--reverse" ]] || [[ "$1" == "-r" ]]; then
             cp scripts/build/termux_step_setup_variables.sh.~ scripts/build/termux_step_setup_variables.sh
         fi
     fi
-    if [[ -f scripts/build/termux_get_repo_files.sh ]]; then
-        if [[ -f scripts/build/termux_get_repo_files.sh.~ ]]; then
-            cp scripts/build/termux_get_repo_files.sh.~ scripts/build/termux_get_repo_files.sh
+    for ff in scripts/build/termux_download_deb_pac.sh scripts/build/termux_get_repo_files.sh; do
+        if [[ -f $ff ]]; then
+            if [[ -f $ff.~ ]]; then
+                cp $ff.~ $ff
+            fi
         fi
-    fi
+    done
     do_replace 's#vn[.]vhn[.]vsc#com.t''ermux#g'
     do_replace 's#csv[.]nhv[.]nv#xumre''t.moc#g'
     # if [[ -f scripts/vh-patches.php ]]; then
