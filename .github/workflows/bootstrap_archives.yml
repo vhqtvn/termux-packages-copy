@@ -26,7 +26,7 @@ jobs:
       - name: Patch
         run: ./patch-repo.sh
       - name: Create bootstrap archive
-        run: ./scripts/generate-bootstraps.sh --repository https://vsc.vhn.vn/termux-packages-24/ --architectures ${{ matrix.arch }} --add termux-elf-cleaner --add gnupg
+        run: ./scripts/vh-generate-bootstraps.sh --repository https://vsc.vhn.vn/termux-packages-24/ --architectures ${{ matrix.arch }} --add termux-elf-cleaner --add gnupg --add libacl
       - name: Store artifacts
         uses: actions/upload-artifact@v2
         with:
