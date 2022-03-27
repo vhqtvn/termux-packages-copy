@@ -118,7 +118,7 @@ pull_package() {
 	fi
 
 	if [ ! -e "$package_tmpdir/package.deb" ]; then
-		echo "[*] Downloading '$package_name'..."
+		echo "[*] Downloading '$package_name' from $package_url..."
 		curl --fail --location --output "$package_tmpdir/package.deb" "$package_url"
 
 		echo "[*] Extracting '$package_name'..."
