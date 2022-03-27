@@ -5,6 +5,10 @@
 
 set -e
 
+cd "$(realpath "$(dirname "$0")")"
+TERMUX_SCRIPTDIR=$(cd .. && pwd)
+export TERMUX_SCRIPTDIR
+
 . $(dirname "$(realpath "$0")")/properties.sh
 BOOTSTRAP_TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/bootstrap-tmp.XXXXXXXX")
 trap 'rm -rf $BOOTSTRAP_TMPDIR' EXIT
@@ -277,6 +281,8 @@ while (($# > 0)); do
 	esac
 	shift 1
 done
+
+source "$TERMUX_SCRIPTDIR/scripts/build/termux_download.sh"
 
 termux_download \
 	"https://raw.githubusercontent.com/termux/termux-elf-cleaner/v1.10/termux-elf-cleaner.cpp" \
