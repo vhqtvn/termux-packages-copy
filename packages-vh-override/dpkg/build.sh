@@ -10,6 +10,7 @@ if [[ "$TERMUX_PKG_VERSION" == "1.21.1" ]]; then
             fn=$(basename "$fpath")
             if [[ -f $TERMUX_PKG_BUILDER_DIR/$fn ]]; then
                 mv $TERMUX_PKG_BUILDER_DIR/$fn $TERMUX_PKG_BUILDER_DIR/.data-backup.$fn.data-backup.
+                cp $fpath $TERMUX_PKG_BUILDER_DIR/$fn
             fi
         done
         termux_step_patch_package_bk
