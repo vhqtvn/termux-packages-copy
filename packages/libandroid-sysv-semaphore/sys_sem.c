@@ -26,27 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#include <linux/sem.h>
+#include "sys_sem.h"
 
 #include <stdarg.h>
 #include <sys/syscall.h>
 #include <unistd.h>
-
-#pragma GCC visibility push(hidden)
-
-int semtimedop(int id, struct sembuf* ops, size_t op_count, const struct timespec* ts) {
-#if defined(SYS_semtimedop)
-  return syscall(SYS_semtimedop, id, ops, op_count, ts);
-#else
-  return syscall(SYS_ipc, SEMTIMEDOP, id, op_count, 0, ops, ts);
-#endif
-}
-
-union semun {
-  int val;
-  struct semid_ds *buf;
-  unsigned short *array;
-} semu;
 
 int semctl(int id, int num, int cmd, ...) {
 #if !defined(__LP64__)
@@ -76,4 +60,20 @@ int semop(int id, struct sembuf* ops, size_t op_count) {
   return semtimedop(id, ops, op_count, NULL);
 }
 
-#pragma GCC visibility pop
+int semtimedop(int id, struct sembuf* ops, size_t op_count, const struct timespec* ts) {
+#if defined(SYS_semtimedop)
+  return syscall(SYS_semtimedop, id, ops, op_count, ts);
+#else
+  return syscall(SYS_ipc, SEMTIMEDOP, id, op_count, 0, ops, ts);
+#endif
+}
+
+/* Make alias for use with e.g. dlopen() */
+#undef semctl
+int semctl(int id, int num, int cmd, ...) __attribute__((alias("libandroid_semctl")));
+#undef semget
+int semget(key_t key, int n, int flags) __attribute__((alias("libandroid_semget")));
+#undef semop
+int semop(int id, struct sembuf* ops, size_t op_count) __attribute__((alias("libandroid_semop")));
+#undef semtimedop
+int semtimedop(int id, struct sembuf* ops, size_t op_count, const struct timespec* ts) __attribute__((alias("libandroid_semtimedop")));
