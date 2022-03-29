@@ -40,6 +40,10 @@ jobs:
         BASE_COMMIT=$(jq --raw-output .pull_request.base.sha "$GITHUB_EVENT_PATH")
         OLD_COMMIT=$(jq --raw-output .commits[0].id "$GITHUB_EVENT_PATH")
         HEAD_COMMIT=$(jq --raw-output .commits[-1].id "$GITHUB_EVENT_PATH")
+        if [[ "$(git log --format="%B" -n 1 "HEAD")" =~ \[PrevCommit:([0-9a-fA-F]+)\] ]]; then
+          echo "Set basecommit from gitlog"
+          BASE_COMMIT=${BASH_REMATCH[1]}
+        fi
         if [ "$BASE_COMMIT" = "null" ]; then
           if [ "$OLD_COMMIT" = "$HEAD_COMMIT" ]; then
             # Single-commit push.
