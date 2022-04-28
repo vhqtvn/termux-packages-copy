@@ -1,7 +1,7 @@
 #!/bin/bash
 # shellcheck disable=SC1117
 
-./scripts/buildorder.py $(ls -1 packages) > /tmp/build-order
+./scripts/buildorder.py "" packages > /tmp/build-order
 
 while read -r PKG PKG_DIR; do
     if grep -Fxq "$PKG" ./built_packages.txt; then
