@@ -187,9 +187,8 @@ jobs:
           fi
         done
 
-        TERMUX_BUILDER_IMAGE_NAME=vanhoavn/vheditor-package-builder
         if [ ! -z "$packages" ]; then
-          ./scripts/run-docker.sh bash -c "bash ./vh-build-package-wrapper.sh -I -a ${{ matrix.target_arch }}"
+          TERMUX_BUILDER_IMAGE_NAME=vanhoavn/vheditor-package-builder ./scripts/run-docker.sh bash -c "bash ./vh-build-package-wrapper.sh -I -a ${{ matrix.target_arch }}"
         fi
 
     - name: Generate build artifacts
