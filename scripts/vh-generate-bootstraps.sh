@@ -330,7 +330,6 @@ for package_arch in "${TERMUX_ARCHITECTURES[@]}"; do
 	else
 		pull_package proot
 	fi
-	pull_package ndk-multilib
 	pull_package coreutils
 	pull_package curl
 	pull_package dash
