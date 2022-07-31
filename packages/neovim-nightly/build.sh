@@ -2,9 +2,12 @@ TERMUX_PKG_HOMEPAGE=https://neovim.io
 TERMUX_PKG_DESCRIPTION="Ambitious Vim-fork focused on extensibility and agility (nvim-nightly)"
 TERMUX_PKG_LICENSE="Apache-2.0"
 TERMUX_PKG_MAINTAINER="Aditya Alok <alok@termux.org>"
-TERMUX_PKG_VERSION="0.8.0-dev-nightly-6-gbb7853a62"
+# Upstream now has version number like "0.8.0-dev-698-ga5920e98f", but actually
+# "0.8.0-dev-698-g1ef84547a" < "0.8.0-dev-nightly-10-g1a07044c1", we need to bump
+# the epoch of the package version.
+TERMUX_PKG_VERSION="1:0.8.0-dev-745-g7f4c50f8c"
 TERMUX_PKG_SRCURL="https://github.com/neovim/neovim/archive/nightly.tar.gz"
-TERMUX_PKG_SHA256=8bb3c957e8ce90494644a9f06aa287dfcd64553a077ab90c775e490b2364f9f8
+TERMUX_PKG_SHA256=5f06d8eb173cf324a9f8c5adcead3a1ff99d8c892e2c42d57d2b547f482157ba
 TERMUX_PKG_DEPENDS="libiconv, libuv, luv, libmsgpack, libandroid-support, libvterm, libtermkey, libluajit, libunibilium, libtreesitter"
 TERMUX_PKG_HOSTBUILD=true
 
@@ -43,7 +46,7 @@ termux_pkg_auto_update() {
 		fi
 	}
 
-	# this outputs in the following format: "0.8.0-dev-nightly-9-g1ef84547a"
+	# this outputs in the following format: "0.8.0-dev-698-ga5920e98f"
 	local remote_nvim_version
 	remote_nvim_version=$(
 		echo "$curl_response" \
@@ -55,7 +58,7 @@ termux_pkg_auto_update() {
 		return 1
 	fi
 
-	remote_nvim_version="$(grep -oP '^\d+\.\d+\.\d+-dev-nightly-\d+-g[0-9a-f]+$' <<< "$remote_nvim_version" || true)"
+	remote_nvim_version="$(grep -oP '^\d+\.\d+\.\d+-dev-\d+-g[0-9a-f]+$' <<< "$remote_nvim_version" || true)"
 
 	if [ -z "$remote_nvim_version" ]; then
 		echo "WARNING: Version in nightly page is not in expected format. Skipping auto-update."
@@ -64,7 +67,7 @@ termux_pkg_auto_update() {
 	fi
 
 	# since we are using a nightly build, therefore no need to check for version increment/decrement.
-	if [ "${TERMUX_PKG_VERSION}" != "${remote_nvim_version}" ]; then
+	if [ "${TERMUX_PKG_VERSION#*:}" != "${remote_nvim_version}" ]; then
 		termux_pkg_upgrade_version "${remote_nvim_version}" --skip-version-check
 	else
 		echo "INFO: No update available."
