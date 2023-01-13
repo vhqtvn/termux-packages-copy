@@ -31,7 +31,7 @@ jobs:
         target_arch: [aarch64, arm, i686, x86_64]
     steps:
     - name: Clone repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 1000
     - name: Gather build summary
@@ -230,7 +230,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Clone repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Get *.deb files
       uses: actions/download-artifact@v2
       with:
