@@ -20,6 +20,7 @@ do_replace() {
 }
 if [[ "$1" == "--reverse" ]] || [[ "$1" == "-r" ]]; then
     echo "* Replace vsc->termux in $(pwd)"
+    rm -f "${HOME}/.termuxrc"
     if [[ -f scripts/build/termux_step_setup_variables.sh ]]; then
         if [[ -f scripts/build/termux_step_setup_variables.sh.~ ]]; then
             cp scripts/build/termux_step_setup_variables.sh.~ scripts/build/termux_step_setup_variables.sh
@@ -38,6 +39,23 @@ if [[ "$1" == "--reverse" ]] || [[ "$1" == "-r" ]]; then
     #     php scripts/vh-patches.php patch --reverse
     # fi
 else
+TMPK="vn.vh""n.vsc"
+cat <<OVERRIDE > "${HOME}/.termuxrc"
+TERMUX_REPO_PACKAGE="$TMPK"
+
+# Termux repo urls.
+TERMUX_REPO_URL=(
+	https://vsc.vhn.vn/termux-packages-24
+)
+
+TERMUX_REPO_DISTRIBUTION=(
+	stable
+)
+
+TERMUX_REPO_COMPONENT=(
+	main
+)
+OVERRIDE
     echo "* Replace termux->vsc in $(pwd)"
     # if [[ -f scripts/vh-patches.php ]]; then
     #     php scripts/vh-patches.php patch
