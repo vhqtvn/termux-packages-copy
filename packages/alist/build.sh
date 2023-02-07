@@ -2,9 +2,12 @@ TERMUX_PKG_HOMEPAGE=https://alist.nn.ci
 TERMUX_PKG_DESCRIPTION="A file list program that supports multiple storage"
 TERMUX_PKG_LICENSE="AGPL-V3"
 TERMUX_PKG_MAINTAINER="2096779623 <admin@utermux.dev>"
-TERMUX_PKG_VERSION="3.9.1"
-TERMUX_PKG_SRCURL=https://github.com/alist-org/alist/archive/v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=db43130797448bda7c56fe1ccb3043f0d39faafdbf74e55109f99e17daf02fee
+TERMUX_PKG_VERSION=(3.10.1) # alist version
+TERMUX_PKG_VERSION+=(3.10.1) # alist-web version
+TERMUX_PKG_SRCURL=(https://github.com/alist-org/alist/archive/v${TERMUX_PKG_VERSION}.tar.gz
+		   https://github.com/alist-org/alist-web/releases/download/${TERMUX_PKG_VERSION[1]}/dist.tar.gz)
+TERMUX_PKG_SHA256=(66e77f8e35af6904361a0199dc4b7c3c7cb8b6864d687a793441b3204df53358
+		   4d754ea380d85070deea939ab9b08f55a3d6193998694cf4ef8e1cdfc5e67722)
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
 
@@ -25,7 +28,7 @@ termux_step_make() {
 
 	local _builtAt=$(date +'%F %T %z')
 	local _goVersion=$(go version | sed 's/go version //')
-	local _gitAuthor="Noah Hsu <i@nn.ci>"
+	local _gitAuthor="Andy Hsu <i@nn.ci>"
 	local _gitCommit=$(git ls-remote https://github.com/alist-org/alist refs/tags/v$TERMUX_PKG_VERSION | head -c 7)
 	export CGO_ENABLED=1
 
