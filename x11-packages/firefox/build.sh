@@ -2,10 +2,11 @@ TERMUX_PKG_HOMEPAGE=https://www.mozilla.org/firefox
 TERMUX_PKG_DESCRIPTION="Mozilla Firefox web browser"
 TERMUX_PKG_LICENSE="MPL-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION=109.0
+TERMUX_PKG_VERSION=110.0.1
 TERMUX_PKG_SRCURL=https://ftp.mozilla.org/pub/firefox/releases/${TERMUX_PKG_VERSION}/source/firefox-${TERMUX_PKG_VERSION}.source.tar.xz
-TERMUX_PKG_SHA256=0678a03b572b5992fb85f0923a25b236acf81e5ea2c08e549b63a56076a69351
-TERMUX_PKG_DEPENDS="at-spi2-atk, fontconfig, freetype, gdk-pixbuf, glib, gtk3, libandroid-shmem, libandroid-sysv-semaphore, libc++, libcairo, libevent, libffi, libice, libicu, libjpeg-turbo, libnspr, libnss, libpixman, libsm, libvpx, libwebp, libx11, libxcb, libxcomposite, libxcursor, libxdamage, libxext, libxfixes, libxi, libxrandr, libxrender, libxtst, pango, pulseaudio"
+TERMUX_PKG_SHA256=f19bb74d684b992625abca68f5776198974cd2785eb5d02d51ba007fc998491f
+# ffmpeg and pulseaudio are dependencies through dlopen(3):
+TERMUX_PKG_DEPENDS="at-spi2-atk, ffmpeg, fontconfig, freetype, gdk-pixbuf, glib, gtk3, libandroid-shmem, libandroid-sysv-semaphore, libc++, libcairo, libevent, libffi, libice, libicu, libjpeg-turbo, libnspr, libnss, libpixman, libsm, libvpx, libwebp, libx11, libxcb, libxcomposite, libxcursor, libxdamage, libxext, libxfixes, libxi, libxrandr, libxrender, libxtst, pango, pulseaudio"
 TERMUX_PKG_BUILD_DEPENDS="libcpufeatures"
 TERMUX_MAKE_PROCESSES=1
 
@@ -13,6 +14,33 @@ termux_step_post_get_source() {
 	local f="media/ffvpx/config_unix_aarch64.h"
 	echo "Applying sed substitution to ${f}"
 	sed -i -E '/^#define (CONFIG_LINUX_PERF|HAVE_SYSCTL) /s/1$/0/' ${f}
+
+	# Add support for FFmpeg 6.0 (please remove when added upstream)
+	local _FFMPEG60_DIR=$TERMUX_PKG_SRCDIR/dom/media/platforms/ffmpeg/ffmpeg60
+	if [ -d "${_FFMPEG60_DIR}" ]; then
+		termux_error_exit "Directory ${_FFMPEG60_DIR} already exists."
+	fi
+	rm -rf ${_FFMPEG60_DIR}
+	mkdir -p ${_FFMPEG60_DIR}
+	cd ${_FFMPEG60_DIR}
+	cp ../ffmpeg59/moz.build ./
+	mkdir -p include
+	cd include
+	mkdir -p libav{codec,util}
+	for f in avcodec.h avfft.h bsf.h codec.h codec_desc.h codec_id.h codec_par.h defs.h packet.h vdpau.h version.h version_major.h; do
+		cp $TERMUX_PREFIX/include/libavcodec/${f} ./libavcodec/
+	done
+	for f in attributes.h avutil.h buffer.h channel_layout.h common.h cpu.h dict.h error.h frame.h hwcontext.h hwcontext_vaapi.h intfloat.h log.h macros.h mathematics.h mem.h pixfmt.h rational.h samplefmt.h version.h avconfig.h; do
+		cp $TERMUX_PREFIX/include/libavutil/${f} ./libavutil/
+	done
+	if [ $TERMUX_ARCH = "i686" ]; then
+		sed -i -E '/^#define AV_HAVE_FAST_UNALIGNED /s/0$/1/' \
+			./libavutil/avconfig.h
+	fi
+	local s=$(find . -type f -print0 | xargs -0 sha256sum | LC_ALL=C sort | sha256sum)
+	if [[ "${s}" != "66d7de01c50d46b588021d1b7be87056b95ec295aeb98b3f37adad1ba9154319  "* ]]; then
+		termux_error_exit "Checksum mismatch for ffmpeg60 header files."
+	fi
 }
 
 termux_step_pre_configure() {
@@ -27,19 +55,6 @@ termux_step_pre_configure() {
 
 	CXXFLAGS+=" -U__ANDROID__"
 	LDFLAGS+=" -landroid-shmem -landroid-sysv-semaphore -llog"
-
-	_NEED_DUMMY_LIBPTHREAD_A=
-	_LIBPTHREAD_A=$TERMUX_PREFIX/lib/libpthread.a
-	if [ ! -e $_LIBPTHREAD_A ]; then
-		_NEED_DUMMY_LIBPTHREAD_A=true
-		echo '!<arch>' > $_LIBPTHREAD_A
-	fi
-	_NEED_DUMMY_LIBRT_A=
-	_LIBRT_A=$TERMUX_PREFIX/lib/librt.a
-	if [ ! -e $_LIBRT_A ]; then
-		_NEED_DUMMY_LIBRT_A=true
-		echo '!<arch>' > $_LIBRT_A
-	fi
 }
 
 termux_step_configure() {
@@ -81,11 +96,5 @@ termux_step_configure() {
 }
 
 termux_step_post_make_install() {
-	if [ $_NEED_DUMMY_LIBPTHREAD_A ]; then
-		rm -f $_LIBPTHREAD_A
-	fi
-	if [ $_NEED_DUMMY_LIBRT_A ]; then
-		rm -f $_LIBRT_A
-	fi
 	install -Dm600 $TERMUX_PKG_BUILDER_DIR/firefox.desktop $TERMUX_PREFIX/share/applications/firefox.desktop
 }

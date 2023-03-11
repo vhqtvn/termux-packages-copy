@@ -3,9 +3,9 @@ TERMUX_PKG_DESCRIPTION="Protocol buffers C++ library (static)"
 TERMUX_PKG_LICENSE="BSD 3-Clause"
 TERMUX_PKG_MAINTAINER="@termux"
 # Please align the version with `libprotobuf` package.
-TERMUX_PKG_VERSION=21.12
+TERMUX_PKG_VERSION=22.1
 TERMUX_PKG_SRCURL=https://github.com/protocolbuffers/protobuf/archive/v${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=22fdaf641b31655d4b2297f9981fa5203b2866f8332d3c6333f6b0107bb320de
+TERMUX_PKG_SHA256=0b6494b6e1a8d197f6626ca0c5aa9ab35fc1e5aa3f724787133ce4fa4aa78499
 TERMUX_PKG_DEPENDS="protobuf (>= 2:${TERMUX_PKG_VERSION})"
 TERMUX_PKG_BUILD_DEPENDS="libc++, zlib"
 TERMUX_PKG_BREAKS="libprotobuf (<< 2:21.12)"
@@ -13,6 +13,7 @@ TERMUX_PKG_REPLACES="libprotobuf (<< 2:21.12)"
 TERMUX_PKG_CONFLICTS="protobuf-dev"
 TERMUX_PKG_NO_STATICSPLIT=true
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
+-Dprotobuf_ABSL_PROVIDER=package
 -Dprotobuf_BUILD_TESTS=OFF
 -DBUILD_SHARED_LIBS=OFF
 -DCMAKE_INSTALL_LIBDIR=lib
@@ -41,6 +42,9 @@ termux_step_post_massage() {
 		! -wholename "./lib/cmake/protobuf/protobuf-targets-release.cmake" \
 		! -wholename "./lib/cmake/protobuf/protobuf-targets.cmake" \
 		! -wholename "./share/doc/$TERMUX_PKG_NAME/*" \
+		-exec rm -f '{}' \;
+	find . ! -type d \
+		-wholename "./lib/libutf8_*" \
 		-exec rm -f '{}' \;
 	find . -type d -empty -delete
 
