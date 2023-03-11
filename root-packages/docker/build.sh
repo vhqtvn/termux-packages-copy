@@ -2,15 +2,12 @@ TERMUX_PKG_HOMEPAGE=https://docker.com
 TERMUX_PKG_DESCRIPTION="Set of products that use OS-level virtualization to deliver software in packages called containers."
 TERMUX_PKG_LICENSE="Apache-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION=20.10.22
-LIBNETWORK_COMMIT=dcdf8f176d1e13ad719e913e796fb698d846de98
-DOCKER_GITCOMMIT=3a2c30b
+TERMUX_PKG_VERSION=23.0.0
+DOCKER_GITCOMMIT=e92dd87
 TERMUX_PKG_SRCURL=(https://github.com/moby/moby/archive/v${TERMUX_PKG_VERSION}.tar.gz
-                   https://github.com/docker/cli/archive/v${TERMUX_PKG_VERSION}.tar.gz
-                   https://github.com/moby/libnetwork/archive/${LIBNETWORK_COMMIT}.tar.gz)
-TERMUX_PKG_SHA256=(ee0e2168e27ec87f1b0650e86af5d3e167a07fd2ff8c1ce3bb588f0b4f9a4658
-                   84d71ac2b508b54e8df9f3ea425aa33e254fd3645fe9bad5619b98eaffb33408
-                   dbe30210e00fd4fcc63ade49ab3b00ba8fa5a1e90d34b92c1ecc25f8b78149ba)
+                   https://github.com/docker/cli/archive/v${TERMUX_PKG_VERSION}.tar.gz)
+TERMUX_PKG_SHA256=(94492508260e57eb93399257d53435cd5308ca6330e173ca6e6f3dbf4c6e12f3
+                   3379d06cd6177832b91f4796c680b6bf15c7895773448716b4c3c5253f611d1b)
 TERMUX_PKG_DEPENDS="containerd, libdevmapper"
 TERMUX_PKG_CONFFILES="etc/docker/daemon.json"
 TERMUX_PKG_BUILD_IN_SRC=true
@@ -80,14 +77,14 @@ termux_step_make() {
 
 	# fix path locations to build with go
 	mkdir -p go/src/github.com/docker
-	mv libnetwork go/src/github.com/docker
-	mkdir libnetwork
-	mv go libnetwork
-	export GOPATH="${PWD}/libnetwork/go"
-	cd "${GOPATH}/src/github.com/docker/libnetwork"
+	mv -T moby go/src/github.com/docker/docker
+	mkdir moby
+	mv go moby
+	export GOPATH="${PWD}/moby/go"
+	cd "${GOPATH}/src/github.com/docker/docker"
 
 	# issue the build command
-	go build -o docker-proxy github.com/docker/libnetwork/cmd/proxy
+	go build -o docker-proxy github.com/docker/docker/cmd/docker-proxy
 	)
 	echo " Done!"
 
@@ -119,8 +116,8 @@ termux_step_make() {
 }
 
 termux_step_make_install() {
-	install -Dm 700 moby/bundles/dynbinary-daemon/dockerd ${TERMUX_PREFIX}/libexec/dockerd
-	install -Dm 700 libnetwork/go/src/github.com/docker/libnetwork/docker-proxy ${TERMUX_PREFIX}/bin/docker-proxy
+	install -Dm 700 moby/go/src/github.com/docker/docker/bundles/dynbinary-daemon/dockerd ${TERMUX_PREFIX}/libexec/dockerd
+	install -Dm 700 moby/go/src/github.com/docker/docker/docker-proxy ${TERMUX_PREFIX}/bin/docker-proxy
 	install -Dm 700 cli/go/src/github.com/docker/cli/build/docker-android-* ${TERMUX_PREFIX}/bin/docker
 	install -Dm 600 -t ${TERMUX_PREFIX}/share/man/man1 cli/go/src/github.com/docker/cli/man/man1/*
 	install -Dm 600 -t ${TERMUX_PREFIX}/share/man/man5 cli/go/src/github.com/docker/cli/man/man5/*
