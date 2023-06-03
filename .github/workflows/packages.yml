@@ -232,7 +232,7 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v3
     - name: Get *.deb files
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: termux-packages-${{ github.sha }}
         path: ./
