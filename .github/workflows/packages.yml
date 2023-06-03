@@ -220,7 +220,7 @@ jobs:
         find debs -type f -name "*.deb" -exec sha256sum "{}" \; | sort -k2
     - name: Store *.deb files
       if: always()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: termux-packages-${{ github.sha }}
         path: ./artifacts
