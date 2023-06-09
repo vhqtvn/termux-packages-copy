@@ -30,7 +30,7 @@ jobs:
       - name: Patch
         run: ./patch-repo.sh
       - name: Create bootstrap archive
-        run: ./scripts/vh-generate-bootstraps.sh --repository https://vsc.vhn.vn/termux-packages-24/  --architectures ${{ matrix.arch }} --add termux-elf-cleaner --add gnupg --add libacl --add libcap --add zstd
+        run: ./scripts/vh-generate-bootstraps.sh --repository https://vsc.vhn.vn/termux-packages-24/  --architectures ${{ matrix.arch }} --add termux-elf-cleaner --add gnupg --add libacl --add libcap --add zstd --add brotli
       - name: Store artifacts
         uses: actions/upload-artifact@v3
         with:
