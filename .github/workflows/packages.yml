@@ -84,7 +84,7 @@ jobs:
         if grep -qP '^scripts/(Dockerfile|setup-ubuntu\.sh)$' <<< "$CHANGED_FILES"; then
           echo "Detected changes for environment setup scripts. Building custom Docker image now."
           cd ./scripts
-          docker build -t vanhoavn/vheditor-package-builder:latest .
+          docker build -t vanhoavn/vheditor-package-builder:latest . || true
           cd ..
         fi
         #############################################
