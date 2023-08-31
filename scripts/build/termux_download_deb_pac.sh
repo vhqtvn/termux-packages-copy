@@ -86,7 +86,6 @@ termux_download_deb_pac() {
 				PKG_PATH="aarch64/${PKG_PATH}"
 			fi
 			if [ -n "$PKG_HASH" ] && [ "$PKG_HASH" != "null" ]; then
->>>>>>> upstream/master
 				if [ ! "$TERMUX_QUIET_BUILD" = true ]; then
 					if [ "$TERMUX_REPO_PKG_FORMAT" = "debian" ]; then
 						echo "Found $PACKAGE in ${TERMUX_REPO_URL[$idx-1]}/dists/${TERMUX_REPO_DISTRIBUTION[$idx-1]}"
