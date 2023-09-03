@@ -58,6 +58,7 @@ for pkgname in ${!CGCT[@]}; do
 	fi
 	tar xJf "${TMPDIR_CGCT}/${filename}" -C / data
 done
+echo mv /data/data/com"".termux /data/data/com.termux
 mv /data/data/com"".termux /data/data/com.termux
 
 # Installing glibc for CGCT
