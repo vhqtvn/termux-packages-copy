@@ -30,6 +30,10 @@ jobs:
       matrix:
         target_arch: [aarch64, arm, i686, x86_64]
     steps:
+    - name: Setup arm and aarch64 CPU emulators
+      uses: dbhi/qus/action@main
+      with:
+        targets: arm aarch64
     - name: Clone repository
       uses: actions/checkout@v3
       with:
