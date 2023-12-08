@@ -9,23 +9,18 @@ TERMUX_PKG_SRCURL=(https://github.com/alist-org/alist/archive/v${TERMUX_PKG_VERS
 TERMUX_PKG_SHA256=(b7d1929d9aef511b263673dba8e5b787f695e1b4fa4555fe562f8060ee0bdea4
 		   ece9d3fd45f18eaa7376e5fc077ebeae8f67b7bcf6004a29ae58392bfc2a3d13)
 TERMUX_PKG_BUILD_IN_SRC=true
-TERMUX_PKG_AUTO_UPDATE=true
+# termux_pkg_upgrade_version couldn't check multiple versions now.
+TERMUX_PKG_AUTO_UPDATE=false
+
+termux_step_post_get_source() {
+	rm -rf public/dist
+	mv -f dist public
+}
 
 termux_step_make() {
 	termux_setup_golang
 
-	# Get alist-web:
-	local ldflags webTag
-	webTag=$(
-		wget -qO- -t1 -T2 "https://api.github.com/repos/alist-org/alist-web/releases/latest" \
-			| grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'
-	)
-	wget https://github.com/alist-org/alist-web/releases/download/${webTag}/dist.tar.gz
-	tar -zxvf dist.tar.gz
-	rm -rf public/dist
-	mv -f dist public
-	rm -rf dist.tar.gz
-
+	local ldflags
 	local _builtAt=$(date +'%F %T %z')
 	local _goVersion=$(go version | sed 's/go version //')
 	local _gitAuthor="Andy Hsu <i@nn.ci>"
@@ -39,7 +34,7 @@ termux_step_make() {
 	-X 'github.com/alist-org/alist/v3/internal/conf.GitAuthor=$_gitAuthor' \
 	-X 'github.com/alist-org/alist/v3/internal/conf.GitCommit=$_gitCommit' \
 	-X 'github.com/alist-org/alist/v3/internal/conf.Version=$TERMUX_PKG_VERSION' \
-	-X 'github.com/alist-org/alist/v3/internal/conf.WebVersion=$webTag' \
+	-X 'github.com/alist-org/alist/v3/internal/conf.WebVersion=${TERMUX_PKG_VERSION[1]}' \
 	"
 	go build -o "${TERMUX_PKG_NAME}" -ldflags="$ldflags" -tags=jsoniter
 }

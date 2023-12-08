@@ -1,6 +1,6 @@
 TERMUX_PKG_HOMEPAGE=http://www.gnu.org/software/guile/
 TERMUX_PKG_DESCRIPTION="Portable, embeddable Scheme implementation written in C"
-TERMUX_PKG_LICENSE="GPL-2.0"
+TERMUX_PKG_LICENSE="LGPL-3.0"
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION=3.0.9
 TERMUX_PKG_REVISION=2
