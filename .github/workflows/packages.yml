@@ -250,11 +250,20 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: termux-packages-${{ github.sha }}
+        name: termux-packages-${{ github.sha }}-${{ matrix.target_arch }}
         path: ./artifacts
+  merge:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: termux-packages-${{ github.sha }}
+          pattern: termux-packages-${{ github.sha }}-*
   upload:
     if: github.event_name != 'pull_request'
-    needs: build
+    needs: merge
     runs-on: ubuntu-latest
     steps:
     - name: Clone repository
@@ -262,6 +271,7 @@ jobs:
     - name: Get *.deb files
       uses: actions/download-artifact@v4
       with:
+        merge-multiple: true
         name: termux-packages-${{ github.sha }}
         path: ./
     - name: Upload
