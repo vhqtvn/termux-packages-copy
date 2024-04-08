@@ -144,13 +144,3 @@ diff -u -r ../orig-source/src/pstree.c ./src/pstree.c
              }
            }
          }
-@@ -1250,8 +1264,7 @@
-   }
-   (void) closedir(dir);
-   fix_orphans();
--  if (print_args)
--    free(buffer);
-+  free(buffer);
-   if (empty) {
-     fprintf(stderr, _("%s is empty (not mounted ?)\n"), PROC_BASE);
-     exit(1);
