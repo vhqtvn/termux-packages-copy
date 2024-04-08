@@ -1,161 +1,97 @@
---- psmisc-23.7-patch/src/pstree.c	2024-04-08 18:31:14.102249783 +0700
-+++ psmisc-23.7/src/pstree.c	2024-01-13 14:17:48.507359537 +0700
-@@ -37,9 +37,7 @@
+--- ../psmisc-23.7/src/pstree.c	2024-01-13 14:17:48.507359537 +0700
++++ ./src/pstree.c	2024-04-08 18:31:14.102249783 +0700
+@@ -37,7 +37,9 @@
  #include <curses.h>
  #include <term.h>
  #include <termios.h>
--#ifndef __ANDROID__
--# include <langinfo.h>
--#endif
-+#include <langinfo.h>
+-#include <langinfo.h>
++#ifndef __ANDROID__
++# include <langinfo.h>
++#endif
  #include <assert.h>
  #include <sys/types.h>
  #include <sys/stat.h>
-@@ -50,10 +48,6 @@
+@@ -48,6 +50,10 @@
  #include "i18n.h"
  #include "comm.h"
  
--#ifdef __ANDROID__
--#include <sys/sysinfo.h>
--#endif
--
++#ifdef __ANDROID__
++#include <sys/sysinfo.h>
++#endif
++
  #ifdef WITH_SELINUX
  #include <dlfcn.h>
  #include <selinux/selinux.h>
-@@ -1037,16 +1031,6 @@
+@@ -1031,6 +1037,16 @@
  static double
  uptime()
  {
--#ifdef __ANDROID__
--    /* Android does not allow read access to /proc/uptime */
--    struct sysinfo system_information;
--    if (sysinfo(&system_information) == 0) {
--        return (double) system_information.uptime;
--    } else {
--        fprintf(stderr, "pstree: error obtaining uptime from sysinfo\n");
--        exit(1);
--    }
--#else
++#ifdef __ANDROID__
++    /* Android does not allow read access to /proc/uptime */
++    struct sysinfo system_information;
++    if (sysinfo(&system_information) == 0) {
++        return (double) system_information.uptime;
++    } else {
++        fprintf(stderr, "pstree: error obtaining uptime from sysinfo\n");
++        exit(1);
++    }
++#else
      char * savelocale;
      char buf[2048];
      FILE* file;
-@@ -1059,7 +1043,6 @@
+@@ -1043,6 +1059,7 @@
      fclose(file);
      setlocale(LC_NUMERIC,savelocale);
      return atof(buf);
--#endif
++#endif
  }
  
  /* process age from jiffies to seconds via uptime */
-@@ -1074,7 +1057,7 @@
+@@ -1057,7 +1074,7 @@
      return age;
  }
  
--static char* get_threadname(const pid_t pid, const int tid, const char *comm, const char* argv0)
-+static char* get_threadname(const pid_t pid, const int tid, const char *comm)
+-static char* get_threadname(const pid_t pid, const int tid, const char *comm)
++static char* get_threadname(const pid_t pid, const int tid, const char *comm, const char* argv0)
  {
      FILE *file;
      char *thread_comm, *endcomm, *threadname;
-@@ -1086,7 +1069,7 @@
+@@ -1069,7 +1086,7 @@
          exit(2);
      }
      if (!thread_names) {
--        sprintf(threadname, THREAD_FORMAT, COMM_LEN, argv0);
-+        sprintf(threadname, THREAD_FORMAT, COMM_LEN, comm);
+-        sprintf(threadname, THREAD_FORMAT, COMM_LEN, comm);
++        sprintf(threadname, THREAD_FORMAT, COMM_LEN, argv0);
          return threadname;
      }
      len = snprintf(NULL, 0, "%s/%d/task/%d/stat", PROC_BASE, pid, tid);
-@@ -1105,9 +1088,6 @@
+@@ -1088,6 +1105,9 @@
                  && (endcomm = strrchr(thread_comm, ')'))) {
                  ++thread_comm;
                  *endcomm = '\0';
--		if (strcmp(comm, thread_comm) == 0) {
--			thread_comm = argv0;
--		}
++		if (strcmp(comm, thread_comm) == 0) {
++			thread_comm = argv0;
++		}
                  sprintf(threadname, THREAD_FORMAT, COMM_LEN, thread_comm);
                  (void) fclose(file);
                  free(path);
-@@ -1149,7 +1129,9 @@
+@@ -1129,9 +1149,7 @@
    else
      buffer_size = BUFSIZ + 1;
  
--  if (!(buffer = malloc(buffer_size))) {
-+  if (!print_args)
-+    buffer = NULL;
-+  else if (!(buffer = malloc(buffer_size))) {
+-  if (!print_args)
+-    buffer = NULL;
+-  else if (!(buffer = malloc(buffer_size))) {
++  if (!(buffer = malloc(buffer_size))) {
      perror("malloc");
      exit(1);
    }
-@@ -1192,48 +1174,11 @@
+@@ -1174,11 +1192,48 @@
                int thread;
  
  	      process_age_sec = process_age(proc_stt_jf);
--
--              /* handle process */
--                sprintf(path, "%s/%d/cmdline", PROC_BASE, pid);
--                if ((fd = open(path, O_RDONLY)) < 0) {
--          /* If this fails then the process is gone.  If a PID
--		   * was specified on the command-line then we might
--		   * not even be interested in the current process.
--		   * There's no sensible way of dealing with this race
--		   * so we might as well behave as if the current
--		   * process did not exist.  */
--                    (void) fclose(file);
--                    free(path);
--                    continue;
--                }
--                if ((size = read(fd, buffer, buffer_size)) < 0) {
--                    /* As above. */
--                    close(fd);
--                    (void) fclose(file);
--                    free(path);
--                    continue;
--                }
--                (void) close(fd);
--                /* If we have read the maximum screen length of args,
--                 * bring it back by one to stop overflow */
--                if (size >= (int)buffer_size)
--                  size--;
--                if (size)
--                  buffer[size++] = 0;
--
--	      char* comm_buf = NULL;
--	      char* argv0 = buffer; /* Null-separated argv, so argv[0]. */
--	      if (strlen(argv0) > COMM_LEN) {
--		      comm_buf = malloc(COMM_LEN);
--		      snprintf(comm_buf, COMM_LEN, "%s", buffer);
--		      argv0 = comm_buf;
--	      }
--
-               /* handle process threads */
-               if (! hide_threads) {
-                 if (! (taskpath = malloc(strlen(path) + 10)))
-                   exit(2);
--                sprintf(taskpath, "%s/%d/task", PROC_BASE, pid);
-+                sprintf(taskpath, "%s/task", path);
- 
-                 if ((taskdir = opendir(taskpath)) != 0) {
-                   /* if we have this dir, we're on 2.6 */
-@@ -1241,7 +1186,7 @@
-                     if ((thread = atoi(dt->d_name)) != 0) {
-                       if (thread != pid) {
-                         char *threadname;
--                        threadname = get_threadname(pid, thread, comm, argv0);
-+                        threadname = get_threadname(pid, thread, comm);
-                         if (print_args)
-                           add_proc(threadname, thread, pid, pgid, st.st_uid,
-                               threadname, strlen (threadname) + 1, 1,
-@@ -1259,15 +1204,40 @@
-                 free(taskpath);
-               }
- 
++
 +              /* handle process */
-               if (!print_args)
--                add_proc(argv0, pid, ppid, pgid, st.st_uid, NULL, 0, 0,
-+                add_proc(comm, pid, ppid, pgid, st.st_uid, NULL, 0, 0,
- 			process_age_sec);
-               else {
--                add_proc(argv0, pid, ppid, pgid, st.st_uid,
 +                sprintf(path, "%s/%d/cmdline", PROC_BASE, pid);
 +                if ((fd = open(path, O_RDONLY)) < 0) {
 +          /* If this fails then the process is gone.  If a PID
@@ -182,40 +118,104 @@
 +                  size--;
 +                if (size)
 +                  buffer[size++] = 0;
-+                add_proc(comm, pid, ppid, pgid, st.st_uid,
++
++	      char* comm_buf = NULL;
++	      char* argv0 = buffer; /* Null-separated argv, so argv[0]. */
++	      if (strlen(argv0) > COMM_LEN) {
++		      comm_buf = malloc(COMM_LEN);
++		      snprintf(comm_buf, COMM_LEN, "%s", buffer);
++		      argv0 = comm_buf;
++	      }
++
+               /* handle process threads */
+               if (! hide_threads) {
+                 if (! (taskpath = malloc(strlen(path) + 10)))
+                   exit(2);
+-                sprintf(taskpath, "%s/task", path);
++                sprintf(taskpath, "%s/%d/task", PROC_BASE, pid);
+ 
+                 if ((taskdir = opendir(taskpath)) != 0) {
+                   /* if we have this dir, we're on 2.6 */
+@@ -1186,7 +1241,7 @@
+                     if ((thread = atoi(dt->d_name)) != 0) {
+                       if (thread != pid) {
+                         char *threadname;
+-                        threadname = get_threadname(pid, thread, comm);
++                        threadname = get_threadname(pid, thread, comm, argv0);
+                         if (print_args)
+                           add_proc(threadname, thread, pid, pgid, st.st_uid,
+                               threadname, strlen (threadname) + 1, 1,
+@@ -1204,40 +1259,15 @@
+                 free(taskpath);
+               }
+ 
+-              /* handle process */
+               if (!print_args)
+-                add_proc(comm, pid, ppid, pgid, st.st_uid, NULL, 0, 0,
++                add_proc(argv0, pid, ppid, pgid, st.st_uid, NULL, 0, 0,
+ 			process_age_sec);
+               else {
+-                sprintf(path, "%s/%d/cmdline", PROC_BASE, pid);
+-                if ((fd = open(path, O_RDONLY)) < 0) {
+-          /* If this fails then the process is gone.  If a PID
+-		   * was specified on the command-line then we might
+-		   * not even be interested in the current process.
+-		   * There's no sensible way of dealing with this race
+-		   * so we might as well behave as if the current
+-		   * process did not exist.  */
+-                    (void) fclose(file);
+-                    free(path);
+-                    continue;
+-                }
+-                if ((size = read(fd, buffer, buffer_size)) < 0) {
+-                    /* As above. */
+-                    close(fd);
+-                    (void) fclose(file);
+-                    free(path);
+-                    continue;
+-                }
+-                (void) close(fd);
+-                /* If we have read the maximum screen length of args,
+-                 * bring it back by one to stop overflow */
+-                if (size >= (int)buffer_size)
+-                  size--;
+-                if (size)
+-                  buffer[size++] = 0;
+-                add_proc(comm, pid, ppid, pgid, st.st_uid,
++                add_proc(argv0, pid, ppid, pgid, st.st_uid,
                       buffer, size, 0, process_age_sec);
                }
--
--	      free(comm_buf);
++
++	      free(comm_buf);
              }
            }
          }
-@@ -1278,7 +1248,8 @@
+@@ -1248,8 +1278,7 @@
    }
    (void) closedir(dir);
    fix_orphans(root_pid);
--  free(buffer);
-+  if (print_args)
-+    free(buffer);
+-  if (print_args)
+-    free(buffer);
++  free(buffer);
    if (empty) {
      fprintf(stderr, _("%s is empty (not mounted ?)\n"), PROC_BASE);
      exit(1);
-@@ -1427,10 +1398,6 @@
+@@ -1398,6 +1427,10 @@
       * command-line options, if given.
       */
  
--#ifdef __ANDROID__
--    /* Droids love unicode */
--    sym = &sym_utf;
--#else
++#ifdef __ANDROID__
++    /* Droids love unicode */
++    sym = &sym_utf;
++#else
      if (isatty(1) && !strcmp(nl_langinfo(CODESET), "UTF-8")) {
          /* Use UTF-8 symbols if the locale's character set is UTF-8. */
          sym = &sym_utf;
-@@ -1450,7 +1417,6 @@
+@@ -1417,6 +1450,7 @@
          /* Otherwise, fall back to ASCII. */
          sym = &sym_ascii;
      }
--#endif
++#endif
  
      while ((c =
              getopt_long(argc, argv, "aAcC:GhH:nN:pglsStTuUVZ", options,
