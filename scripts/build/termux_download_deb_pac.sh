@@ -32,15 +32,6 @@ termux_download_deb_pac() {
 		return "$?"
 	fi
 
-	local DEB_FILE="${PACKAGE}_${VERSION}_${PACKAGE_ARCH}.deb"
-
-	if [ ! -z "${TERMUX_DEBDIR-}" ] && [ -f "$TERMUX_DEBDIR/$DEB_FILE" ]; then
-		cp "$TERMUX_DEBDIR/$DEB_FILE" "${TERMUX_COMMON_CACHEDIR}-${PACKAGE_ARCH}/${DEB_FILE}"
-		return 0
-	fi
-
-	PKG_HASH=""
-
 	for idx in $(seq ${#TERMUX_REPO_URL[@]}); do
 		local TERMUX_REPO_NAME=$(echo ${TERMUX_REPO_URL[$idx-1]} | sed -e 's%https://%%g' -e 's%http://%%g' -e 's%/%-%g')
 		if [ "$TERMUX_REPO_PKG_FORMAT" = "debian" ]; then
