@@ -1,17 +1,22 @@
-TERMUX_PKG_HOMEPAGE=https://wiki.gnome.org/Apps/Ghex
-TERMUX_PKG_DESCRIPTION="A simple binary editor for the Gnome desktop."
-TERMUX_PKG_LICENSE="GPL-2.0"
+TERMUX_PKG_HOMEPAGE="https://www.freedesktop.org/wiki/Distributions/AppStream/"
+TERMUX_PKG_DESCRIPTION="Provides a standard for creating app stores across distributions"
+TERMUX_PKG_LICENSE="LGPL-2.1"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="46.0"
-TERMUX_PKG_REVISION=1
-TERMUX_PKG_SRCURL=https://ftp.gnome.org/pub/GNOME/sources/ghex/${TERMUX_PKG_VERSION%.*}/ghex-${TERMUX_PKG_VERSION}.tar.xz
-TERMUX_PKG_SHA256=a1c46f3020cb358b8323025db3a539c97d994a4c46f701f48edc6357f7fbcbd1
+TERMUX_PKG_VERSION="1.0.3"
+TERMUX_PKG_SRCURL=https://github.com/ximion/appstream/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
+TERMUX_PKG_SHA256=dd7222519b5d855124fa803ce82a7cbf090ac6b2e44a5bc515e729b1f20a63ae
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="glib, gtk4, libadwaita, libcairo, pango"
-TERMUX_PKG_BUILD_DEPENDS="g-ir-scanner, glib-cross"
+TERMUX_PKG_UPDATE_TAG_TYPE="newest-tag"
+TERMUX_PKG_DEPENDS="curl, glib, libxml2, libxmlb, libyaml, zstd"
+TERMUX_PKG_BUILD_DEPENDS="g-ir-scanner, glib-cross, valac"
 TERMUX_PKG_DISABLE_GIR=false
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
--Dintrospection=enabled
+-Dapidocs=false
+-Ddocs=false
+-Dgir=true
+-Dstemming=false
+-Dsystemd=false
+-Dvapi=true
 "
 
 termux_step_pre_configure() {
