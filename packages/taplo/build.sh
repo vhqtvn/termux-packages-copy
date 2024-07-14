@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://taplo.tamasfe.dev/
 TERMUX_PKG_DESCRIPTION="A TOML LSP and toolkit"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="Joshua Kahn @TomJo2000"
-TERMUX_PKG_VERSION='0.9.1'
+TERMUX_PKG_VERSION="0.9.2"
 TERMUX_PKG_SRCURL=https://github.com/tamasfe/taplo/archive/refs/tags/release-taplo-cli-${TERMUX_PKG_VERSION}.tar.gz
-TERMUX_PKG_SHA256=6b00333260bd593f7eb2046c9d5f0fac48b5e673e9b064b23eccf240a86b33f7
+TERMUX_PKG_SHA256=86884b6a2d505d6280ae1304e2bdc434e3b572d05d833833f7189331124f81ae
 TERMUX_PKG_BUILD_DEPENDS='openssl'
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_AUTO_UPDATE=true
@@ -26,6 +26,11 @@ termux_pkg_auto_update() {
 		echo "INFO: No update needed. Already at version '${TERMUX_PKG_VERSION}'."
 		return
 	fi
+
+	# We want to avoid re-filtering the version.
+	# It's already cleaned up, so unset the regexp.
+	# See: https://github.com/termux/termux-packages/issues/20836
+	unset TERMUX_PKG_UPDATE_VERSION_REGEXP
 
 	termux_pkg_upgrade_version "${latest_version}"
 }
