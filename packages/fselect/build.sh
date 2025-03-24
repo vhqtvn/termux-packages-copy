@@ -2,9 +2,9 @@ TERMUX_PKG_HOMEPAGE=https://fselect.rocks/
 TERMUX_PKG_DESCRIPTION="Find files with SQL-like queries"
 TERMUX_PKG_LICENSE="Apache-2.0, MIT"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="0.8.9"
+TERMUX_PKG_VERSION="0.8.10"
 TERMUX_PKG_SRCURL=https://github.com/jhspetersson/fselect/archive/$TERMUX_PKG_VERSION.tar.gz
-TERMUX_PKG_SHA256=08a903e2bd7d68dff004a6552dc5823989c74ce20a96416601ce7002f6b51a7b
+TERMUX_PKG_SHA256=8dc69266a7dc2b9029b111053ec761388fecb1473f68d0f2241a33cfc2bb296c
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_DEPENDS="zlib"
@@ -31,6 +31,12 @@ termux_step_pre_configure() {
 	for d in $CARGO_HOME/registry/src/*/libmimalloc-sys-*; do
 		patch --silent -p1 -d ${d} < "${TERMUX_PKG_BUILDER_DIR}/${p}"
 	done
+
+	# ld.lld: error: undefined symbol: __atomic_load_8
+	if [[ "${TERMUX_ARCH}" == "i686" ]]; then
+		local env_host=$(printf $CARGO_TARGET_NAME | tr a-z A-Z | sed s/-/_/g)
+		export CARGO_TARGET_${env_host}_RUSTFLAGS+=" -C link-arg=$(${CC} -print-libgcc-file-name)"
+	fi
 }
 
 termux_step_post_make_install() {
