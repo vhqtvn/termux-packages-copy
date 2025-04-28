@@ -365,6 +365,11 @@ source "$TERMUX_SCRIPTDIR/scripts/build/termux_step_strip_elf_symbols.sh"
 # shellcheck source=scripts/build/termux_step_elf_cleaner.sh
 source "$TERMUX_SCRIPTDIR/scripts/build/termux_step_elf_cleaner.sh"
 
+# Hook for packages before massage step
+termux_step_pre_massage() {
+	return
+}
+
 # Hook for packages after massage step
 termux_step_post_massage() {
 	return
@@ -727,6 +732,8 @@ for ((i=0; i<${#PACKAGE_LIST[@]}; i++)); do
 		termux_step_install_license
 		cd "$TERMUX_PKG_MASSAGEDIR"
 		termux_step_copy_into_massagedir
+		termux_step_pre_massage
+		cd "$TERMUX_PKG_MASSAGEDIR/$TERMUX_PREFIX_CLASSICAL"
 		termux_step_massage
 		cd "$TERMUX_PKG_MASSAGEDIR/$TERMUX_PREFIX_CLASSICAL"
 		termux_step_post_massage
