@@ -10,9 +10,6 @@ Session.vim
 .history
 vh-tmp*
 
-# Vagrant
-scripts/.vagrant/
-
 # Logs
 scripts/*.log
 /*.log
