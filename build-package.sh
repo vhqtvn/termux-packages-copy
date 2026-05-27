@@ -517,15 +517,17 @@ _show_usage() {
 	echo "Build a package by creating a .deb file in the output/ folder."
 	echo
 	echo "Available options:"
-	[[ "$TERMUX_ON_DEVICE_BUILD" = "false" ]] && echo "  -a The architecture to build for: aarch64(default), arm, i686, x86_64 or all."
+	[[ "$TERMUX_ON_DEVICE_BUILD" == "false" ]] && echo "  -a The architecture to build for: aarch64(default), arm, i686, x86_64 or all."
 	echo "  -c Continue previous build."
 	echo "  -C Cleanup already built packages on low disk space."
 	echo "  -d Build with debug symbols."
 	echo "  -D Build a disabled package in disabled-packages/."
 	echo "  -f Force build even if package has already been built."
 	echo "  -F Force build even if package and its dependencies have already been built."
-	[[ "$TERMUX_ON_DEVICE_BUILD" = "false" ]] && echo "  -i Download and extract dependencies instead of building them."
+	[[ "$TERMUX_ON_DEVICE_BUILD" == "false" ]] && echo "  -i Download and extract dependencies instead of building them."
 	echo "  -I Download and extract dependencies instead of building them, keep existing $TERMUX_BASE_DIR files."
+	echo "  -j <N> Number of threads. (default or 0, N = \`nproc\` = $(nproc))"
+	echo "         Can also be passed combined, e.g. '-j12'."
 	echo "  -L The package and its dependencies will be based on the same library."
 	echo "  -q Quiet build."
 	echo "  -Q Loud build -- set -x debug output and function tracing."
@@ -586,6 +588,21 @@ while (( $# )); do
 			export TERMUX_INSTALL_DEPS=true
 			export TERMUX_PKGS__BUILD__RM_ALL_PKGS_BUILT_MARKER_AND_INSTALL_FILES=false
 		;;
+		-j|-j[0-9]*)
+			# If we got the 2 arg form discard the "-j".
+			[[ "$1" == "-j" && "${2:-}" == [0-9]* ]] && shift 1
+			# Check that -j's argument exists and is numeric.
+			[[ -n "${1/-j}" && "${1/-j}" =~ ^[0-9]+$ ]] || termux_error_exit "./build-package.sh: option '-j' only takes integers"
+
+			# Assign the requested number of threads.
+			# If the result is 0 or negative then default to `nproc`
+			TERMUX_PKG_MAKE_PROCESSES="${1/-j}"
+			if (( TERMUX_PKG_MAKE_PROCESSES < 1 )); then
+				TERMUX_PKG_MAKE_PROCESSES="$(nproc)"
+			fi
+
+			export TERMUX_PKG_MAKE_PROCESSES
+		;;
 		-L) export TERMUX_GLOBAL_LIBRARY=true;;
 		-q) export TERMUX_QUIET_BUILD=true;;
 		-Q) export PS4='+$0 \[\e[32m\]${FUNCNAME[0]:-<global scope>}${FUNCNAME[*]:+()}:$LINENO\[\e[0m\] '; set -x;;
@@ -634,7 +651,7 @@ if [[ -n "${TERMUX_PACKAGE_LIBRARY-}" ]]; then
 	esac
 fi
 
-if [[ "${TERMUX_INSTALL_DEPS-false}" = "true" || "${TERMUX_PACKAGE_LIBRARY-bionic}" = "glibc" ]]; then
+if [[ "${TERMUX_INSTALL_DEPS-false}" == "true" || "${TERMUX_PACKAGE_LIBRARY-bionic}" == "glibc" ]]; then
 	# Setup PGP keys for verifying integrity of dependencies.
 	# Keys are obtained from our keyring package.
 	gpg --list-keys 37634DFCD2DF65EB5F040FB140BBE8394CCCDE8F > /dev/null 2>&1 || {
@@ -793,7 +810,7 @@ for (( i=0; i < ${#PACKAGE_LIST[@]}; i++ )); do
 		termux_step_post_massage
 		(cd "$TERMUX_PKG_MASSAGEDIR" && $TERMUX_SCRIPTDIR/patch-repo.sh);
 		# At the final stage (when the package is archiving) it is better to use commands from the system
-		if [[ "$TERMUX_ON_DEVICE_BUILD" = "false" ]]; then
+		if [[ "$TERMUX_ON_DEVICE_BUILD" == "false" ]]; then
 			export PATH="/usr/bin:$PATH"
 		fi
 		cd "$TERMUX_PKG_MASSAGEDIR"
