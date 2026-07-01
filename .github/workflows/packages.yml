@@ -280,31 +280,14 @@ jobs:
     needs: merge
     runs-on: ubuntu-latest
     steps:
-    - name: Clone repository
-      uses: actions/checkout@v4
     - name: Get *.deb files
       uses: actions/download-artifact@v4
       with:
         merge-multiple: true
         name: termux-packages-${{ github.sha }}
         path: ./
-    - name: Upload
-      env:
-        REPOSITORY_NAME: termux-main
-        REPOSITORY_DISTRIBUTION: stable
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+    - name: Upload to vsc.vhn.vn
       run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.KNOWN_HOST_ENTRY }}" >> ~/.ssh/known_hosts
-        ssh-agent -a $SSH_AUTH_SOCK
-        ssh-add - <<< "${{ secrets.SSHKEY }}"
-    - name: Upload to vhn.vn
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      run: |
-        # Zip the deb archives to only do one transfer to the repo.
-        # This makes it easier to parse it, we can run one update job
-        # instead of one for each arch on the server.
         archive="termux-packages-${{ github.sha }}.zip"
         deb_archives=$(find -maxdepth 1 -name "debs-*-${{ github.sha }}.tar")
 
@@ -312,7 +295,10 @@ jobs:
           echo "No archives to upload found"
           exit 0
         fi
+
         zip $archive ${deb_archives}
-        sftp -P ${{ secrets.PORT }} ${{ secrets.USER }}@vhn.vn <<EOF
-          put $archive debs/
-        EOF
+        curl --fail --retry 3 \
+          -X POST \
+          -H "Authorization: Bearer ${{ secrets.VSC_UPLOAD_TOKEN }}" \
+          -F "file=@${archive}" \
+          ${{ secrets.VSC_UPLOAD_URL }}
